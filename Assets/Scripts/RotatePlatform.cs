@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RotatePlatform : MonoBehaviour
 {
+    // Create empty object to set as a parent of the platform. Scale (1, 1, 1) and assign to platform variable
     public Transform platform;
 
     private bool isOnButton = false;

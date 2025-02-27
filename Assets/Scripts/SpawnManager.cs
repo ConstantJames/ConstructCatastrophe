@@ -8,9 +8,11 @@ public class SpawnManager : MonoBehaviour
     private GameObject currentObject;
     public Transform spawnPoint;
 
+    public float spawnRate = 3.0f;
+
     void Start()
     {
-        InvokeRepeating("SpawnObject", 1.0f, 3.0f);
+        InvokeRepeating("SpawnObject", 1.0f, spawnRate);
     }
 
     void SpawnObject()
