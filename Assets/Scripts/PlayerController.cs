@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public enum Player { One, Two };
+    public Player playerSelect;
+    public GameObject playerTwo;
+    
     private Rigidbody rbPlayer;
     private LayerMask pickableLayerMask;
 
@@ -18,31 +22,55 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool isGrounded;
 
-    public Transform playerHands;
+    private Transform playerHands;
     private GameObject objectInHands;
     private Rigidbody rbObject;
     private Collider colObject;
     private bool pickupButton;
     private bool dropButton;
-    public bool hasObject = false;
+    private bool hasObject = false;
 
     void Start()
     {
         rbPlayer = GetComponent<Rigidbody>();
+        playerHands = gameObject.transform.GetChild(0);
         pickableLayerMask = LayerMask.GetMask("Pickable"); // SET EVERY OBJECT THAT CAN BE PICKED UP UNDER "Pickable" LAYER
     }
 
     void Update()
     {
-        // Movement + Jumping
-        horizontalVelocity = Input.GetAxis("Horizontal");
-        verticalVelocity = Input.GetAxis("Vertical");
+        // Activate multiplayer - EXTREMELY basic implementation just for proof of concept, will revise later + probably move to another script
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            playerTwo.SetActive(true);
+        }
 
+        // Inputs
+        if (playerSelect == Player.One)
+        {
+            horizontalVelocity = Input.GetAxis("Horizontal1");
+            verticalVelocity = Input.GetAxis("Vertical1");
+
+            spaceDown = Input.GetButtonDown("Jump1");
+
+            pickupButton = Input.GetKeyDown(KeyCode.E);
+            dropButton = Input.GetKeyDown(KeyCode.Q);
+        }
+        else if (playerSelect == Player.Two)
+        {
+            horizontalVelocity = Input.GetAxis("Horizontal2");
+            verticalVelocity = Input.GetAxis("Vertical2");
+
+            spaceDown = Input.GetButtonDown("Jump2");
+
+            pickupButton = Input.GetKeyDown(KeyCode.Keypad1);
+            dropButton = Input.GetKeyDown(KeyCode.Keypad2);
+        }
+
+        // Movement + Jumping
         direction = new Vector3(horizontalVelocity, 0, verticalVelocity).normalized;
 
-        spaceDown = Input.GetButtonDown("Jump");
-
-        if (spaceDown)
+        if (spaceDown && isGrounded)
         {
             isJumping = true;
         }
@@ -56,14 +84,11 @@ public class PlayerController : MonoBehaviour
 
         Debug.DrawRay(transform.position, fwd * 10, Color.yellow); // Visible raycast in Scene view during play
 
-        pickupButton = Input.GetKeyDown(KeyCode.E);
-        dropButton = Input.GetKeyDown(KeyCode.Q);
-
         RaycastHit hit;
 
         if (Physics.Raycast(transform.position, fwd, out hit, 10, pickableLayerMask))
         {
-            Debug.Log("Object detected - Press E to pick up and Q to drop");
+            Debug.Log("Player " + playerSelect + ": Object detected - Press E/Numpad1 to pick up and Q/Numpad2 to drop");
 
             if (pickupButton && !hasObject)
             {

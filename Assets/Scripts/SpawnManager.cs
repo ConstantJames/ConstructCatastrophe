@@ -6,7 +6,6 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject[] objects;
     private GameObject currentObject;
-    public Transform spawnPoint;
 
     public float spawnRate = 3.0f;
 
@@ -21,6 +20,6 @@ public class SpawnManager : MonoBehaviour
 
         currentObject = objects[randomObject];
 
-        Instantiate(currentObject, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(currentObject, transform.position, transform.rotation);
     }
 }
