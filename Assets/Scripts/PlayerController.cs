@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class PlayerController : MonoBehaviour
 {
     public enum Player { One, Two };
     public Player playerSelect;
-    public GameObject playerTwo;
     
     private Rigidbody rbPlayer;
     private LayerMask pickableLayerMask;
@@ -30,6 +31,9 @@ public class PlayerController : MonoBehaviour
     private bool dropButton;
     private bool hasObject = false;
 
+    public bool massPowerup = false;
+    public bool jumpPowerup = false;
+
     void Start()
     {
         rbPlayer = GetComponent<Rigidbody>();
@@ -38,13 +42,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
-    {
-        // Activate multiplayer - EXTREMELY basic implementation just for proof of concept, will revise later + probably move to another script
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            playerTwo.SetActive(true);
-        }
-
+    { 
         // Inputs
         if (playerSelect == Player.One)
         {
@@ -88,7 +86,14 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(transform.position, fwd, out hit, 10, pickableLayerMask))
         {
-            Debug.Log("Player " + playerSelect + ": Object detected - Press E/Numpad1 to pick up and Q/Numpad2 to drop");
+            if (playerSelect == Player.Two)
+            {
+                Debug.Log("Player " + playerSelect + ": Object detected - Press Numpad1 to pick up and Numpad2 to drop");
+            }
+            else
+            {
+                Debug.Log("Player " + playerSelect + ": Object detected - Press E to pick up and Q to drop");
+            }
 
             if (pickupButton && !hasObject)
             {
@@ -100,6 +105,13 @@ public class PlayerController : MonoBehaviour
                 objectInHands.transform.parent = playerHands.transform;
                 rbObject.isKinematic = true;
                 colObject.enabled = false;
+
+                // Increases mass of object if powerup is active
+                if (massPowerup)
+                {
+                    rbObject.mass = 40;
+                    // Probably should change how the object looks as well
+                }
 
                 hasObject = true;
             }
@@ -124,6 +136,7 @@ public class PlayerController : MonoBehaviour
         if (isJumping && isGrounded)
         {
             rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
             isGrounded = false;
             isJumping = false;
         }
@@ -135,5 +148,37 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
         }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("MassPowerup"))
+        {
+            massPowerup = true;
+            StartCoroutine(MassPowerUpCountdown());
+            Destroy(other.gameObject); // can rework this if it breaks visuals
+        }
+        else if (other.gameObject.CompareTag("JumpPowerup"))
+        {
+            jumpPowerup = true;
+            StartCoroutine(JumpPowerUpCountdown());
+            Destroy(other.gameObject); // can rework this if it breaks visuals
+        }
+    }
+
+    IEnumerator MassPowerUpCountdown()
+    {
+        Debug.Log("Mass Powerup activated - 30 seconds");
+        yield return new WaitForSeconds(30);
+        massPowerup = false;
+        Debug.Log("Mass Powerup deactivated");
+    }
+
+    IEnumerator JumpPowerUpCountdown()
+    {
+        Debug.Log("Jump Powerup activated - 30 seconds");
+        yield return new WaitForSeconds(30);
+        jumpPowerup = false;
+        Debug.Log("Jump Powerup deactivated");
     }
 }
