@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
 {
     public float EventsDelayTime = 10f;
 
+    public GameObject playerTwo;
+
     private void Start()
     {
         // vvv Add events to the list below vvv
@@ -14,6 +16,15 @@ public class GameManager : MonoBehaviour
 
         // Start the coroutine to delay the event manager
         StartCoroutine(DelayEventManager());
+    }
+
+    void Update()
+    {
+        // Activate multiplayer - EXTREMELY basic implementation just for proof of concept, will revise later
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            playerTwo.SetActive(true);
+        }
     }
 
     private IEnumerator DelayEventManager()
