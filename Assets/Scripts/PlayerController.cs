@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private bool spaceDown = false;
     private bool isJumping = false;
     private bool isGrounded;
+    private bool doubleJump;
 
     private Transform playerHands;
     private GameObject objectInHands;
@@ -68,9 +69,18 @@ public class PlayerController : MonoBehaviour
         // Movement + Jumping
         direction = new Vector3(horizontalVelocity, 0, verticalVelocity).normalized;
 
-        if (spaceDown && isGrounded)
+        if (spaceDown)
         {
-            isJumping = true;
+            if (isGrounded || doubleJump)
+            {
+                isJumping = true;
+                isGrounded = false;
+            }
+        }
+
+        if (isGrounded && !spaceDown)
+        {
+            doubleJump = false;
         }
 
         // Player faces the direction they are moving in
@@ -133,12 +143,17 @@ public class PlayerController : MonoBehaviour
         // Movement + Jumping
         rbPlayer.velocity = new Vector3(direction.x * speed, rbPlayer.velocity.y, direction.z * speed);
 
-        if (isJumping && isGrounded)
+        if (isJumping)
         {
+            rbPlayer.velocity = new Vector3(rbPlayer.velocity.x, 0, rbPlayer.velocity.z);
             rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            isGrounded = false;
             isJumping = false;
+
+            if (jumpPowerup)
+            {
+                doubleJump = !doubleJump;
+            }
         }
     }
 
@@ -147,6 +162,19 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+
+            if (jumpPowerup)
+            {
+                doubleJump = true;
+            }
         }
     }
 
