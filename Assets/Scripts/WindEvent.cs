@@ -5,14 +5,10 @@ using UnityEngine;
 public class WindEvent : MonoBehaviour
 {
     public GameObject Wind;
+    public GameObject Wind2;
     public float FanDuration = 1.0f;
     public float SpawnRate = 0.3f;
-
-    private void Start()
-    {
-        
-    }
-
+                   
     public void StartWind()
     {
         StartCoroutine(WindBlow());
@@ -35,6 +31,7 @@ public class WindEvent : MonoBehaviour
         {
             elapsedTime += SpawnRate;
             Instantiate(Wind);
+            Instantiate(Wind2);
             yield return new WaitForSeconds(SpawnRate);
         }
         

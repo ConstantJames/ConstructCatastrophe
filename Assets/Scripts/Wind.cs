@@ -18,6 +18,11 @@ public class Wind : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.up * Speed * Time.deltaTime);
+
+        if (transform.position.x > 45 || transform.position.x < -45)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

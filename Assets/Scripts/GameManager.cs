@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerTwo;
 
+    public EarthQuake earthQuake;
+    public WindEvent windEvent;    
+
     private void Start()
     {
         // vvv Add events to the list below vvv
@@ -38,11 +41,13 @@ public class GameManager : MonoBehaviour
 
     void EventOne()
     {
+        earthQuake.StartEarthquake();
         Debug.Log("EARTHQUAKE!");
     }
 
     void EventTwo()
     {
+        windEvent.StartWind();
         Debug.Log("Fans triggered!");
     }
 
