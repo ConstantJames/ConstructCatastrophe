@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class EarthQuake : MonoBehaviour
 {
-    public float EarthquakeIntensity = 0.5f;
-    public float EarthquakeDuration = 1.0f; 
-    public float EarthquakeFrequency = 0.1f;
+    public float EarthquakeIntensity = 0.5f; // Intensity of the Earthquake
+    public float EarthquakeDuration = 1.0f;  // Duration of the Earthquake in seconds
+    public float EarthquakeFrequency = 0.1f; // Frequency of the Earthquake updates
+    public float RotationIntensity = 0.2f;   // Rotation intensity in degrees
 
     private Vector3 originalPosition;
+    private Quaternion originalRotation;
 
     private void Start()
     {
         originalPosition = transform.localPosition;
+        originalRotation = transform.localRotation;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            StartCoroutine(Earthquake());
+        }
     }
 
     public void StartEarthquake()
@@ -31,12 +42,18 @@ public class EarthQuake : MonoBehaviour
             float offsetY = Random.Range(-EarthquakeIntensity, EarthquakeIntensity);
             float offsetZ = Random.Range(-EarthquakeIntensity, EarthquakeIntensity);
 
+            float rotationX = Random.Range(-RotationIntensity, RotationIntensity);
+            float rotationY = Random.Range(-RotationIntensity, RotationIntensity);
+            float rotationZ = Random.Range(-RotationIntensity, RotationIntensity);
+
             transform.localPosition = originalPosition + new Vector3(offsetX, offsetY, offsetZ);
+            transform.localRotation = originalRotation * Quaternion.Euler(rotationX, rotationY, rotationZ);
 
             yield return new WaitForSeconds(EarthquakeFrequency);
         }
 
-        // Reset the position after the Earthquake
+        // Reset the position and rotation after the Earthquake
         transform.localPosition = originalPosition;
+        transform.localRotation = originalRotation;
     }
 }
