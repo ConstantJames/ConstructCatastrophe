@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class WindEvent : MonoBehaviour
 {
-    public GameObject Wind;
-    //public GameObject Wind2;
-    public GameObject spawnPoint;
+    public GameObject windPrefab1;
+    //public GameObject windPrefab2;
+    public GameObject windSpawn1;
+   // public GameObject windSpawn2;
     public float FanDuration = 1.0f;
     public float SpawnRate = 0.3f;
                    
@@ -15,7 +16,7 @@ public class WindEvent : MonoBehaviour
         StartCoroutine(WindBlow());
     }
 
-    //vvv Manually trigger wind spawn vvv
+    //vvv Manually trigger windPrefab spawn vvv
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
@@ -31,8 +32,8 @@ public class WindEvent : MonoBehaviour
         while (elapsedTime<FanDuration)
         {
             elapsedTime += SpawnRate;
-            Instantiate(Wind, spawnPoint.transform.position, spawnPoint.transform.rotation);
-            //Instantiate(Wind2);
+            Instantiate(windPrefab1, windSpawn1.transform.position, windPrefab1.transform.rotation);
+            //Instantiate(windPrefab2, windSpawn2.transform.position, windPrefab2.transform.rotation);
             yield return new WaitForSeconds(SpawnRate);
         }
         
