@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class KillZone : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject spawnPoint;
 
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(other.gameObject);
+        if (other.CompareTag("Player"))
+        {
+            other.transform.position = spawnPoint.transform.position;
+        }
+        else
+        {
+            Destroy(other.gameObject);
+        }
     }
 }

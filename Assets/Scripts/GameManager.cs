@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
         {
             playerTwo.SetActive(true);
         }
+
+        // Exit game - Will implement into UI later
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     private IEnumerator DelayEventManager()

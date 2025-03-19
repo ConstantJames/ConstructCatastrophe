@@ -207,6 +207,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Jump Powerup activated - 30 seconds");
         yield return new WaitForSeconds(30);
         jumpPowerup = false;
+        doubleJump = false;
         Debug.Log("Jump Powerup deactivated");
     }
 }
