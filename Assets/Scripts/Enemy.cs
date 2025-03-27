@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        // Selects which player to go for - Will target the closest player
         if (agent.enabled)
         {
             float distanceToClosest = Vector3.Distance(target.transform.position, transform.position);
@@ -58,7 +59,7 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!agent.enabled && colEnemy && collision.gameObject.CompareTag("Ground"))
+        if (!agent.enabled && colEnemy.enabled && collision.gameObject.CompareTag("Ground"))
         {
             agent.enabled = true;
             rbEnemy.isKinematic = true;

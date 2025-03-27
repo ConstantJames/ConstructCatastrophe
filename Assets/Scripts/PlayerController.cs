@@ -29,7 +29,8 @@ public class PlayerController : MonoBehaviour
     private GameObject objectInHands;
     private Rigidbody rbObject;
     private Collider colObject;
-    private NavMeshAgent navEnemy;
+    private Renderer rendObject;
+    private BoxCollider colChild; // maybe temp
     private bool pickupButton;
     private bool dropButton;
     private bool hasObject = false;
@@ -55,8 +56,8 @@ public class PlayerController : MonoBehaviour
 
             spaceDown = Input.GetButtonDown("Jump1");
 
-            pickupButton = Input.GetKeyDown(KeyCode.E);
-            dropButton = Input.GetKeyDown(KeyCode.Q);
+            pickupButton = Input.GetKeyDown(KeyCode.J);
+            dropButton = Input.GetKeyDown(KeyCode.K);
         }
         else if (playerSelect == Player.Two)
         {
@@ -86,7 +87,6 @@ public class PlayerController : MonoBehaviour
             doubleJump = false;
         }
 
-        // Vector3 lookDirection = direction + gameObject.transform.position; OLD - instant turning
         // Player faces the direction they are moving in with smooth turning
         if (direction != Vector3.zero)
         {
@@ -101,14 +101,14 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(transform.position, fwd, out hit, 10, pickableLayerMask))
-        {
-            if (playerSelect == Player.Two)
+        {   
+            if (playerSelect == Player.One)
             {
-                Debug.Log("Player " + playerSelect + ": Object detected - Press Numpad1 to pick up and Numpad2 to drop");
+                Debug.Log("Player " + playerSelect + ": Object detected - Press E to pick up and Q to drop");
             }
             else
             {
-                Debug.Log("Player " + playerSelect + ": Object detected - Press E to pick up and Q to drop");
+                Debug.Log("Player " + playerSelect + ": Object detected - Press Numpad1 to pick up and Numpad2 to drop");
             }
 
             if (pickupButton && !hasObject)
@@ -116,16 +116,27 @@ public class PlayerController : MonoBehaviour
                 objectInHands = hit.transform.gameObject;
                 rbObject = objectInHands.GetComponent<Rigidbody>();
                 colObject = objectInHands.GetComponent<Collider>();
+                rendObject = objectInHands.GetComponent<Renderer>();
 
                 objectInHands.transform.position = playerHands.transform.position;
                 objectInHands.transform.parent = playerHands.transform;
                 rbObject.isKinematic = true;
                 colObject.enabled = false;
 
-                if (objectInHands.layer == 7) // "Enemy" layer
+                if (objectInHands.layer == 6) // for objects
                 {
-                    navEnemy = objectInHands.GetComponent<NavMeshAgent>();
+                    rendObject.material.SetColor("_Color", Color.green);
+                }
+                else // for enemies
+                {
+                    NavMeshAgent navEnemy = objectInHands.GetComponent<NavMeshAgent>();
                     navEnemy.enabled = false;
+
+                    if (objectInHands.transform.childCount > 0)
+                    {
+                        colChild = objectInHands.GetComponentInChildren<BoxCollider>();
+                        colChild.enabled = false;
+                    }
                 }
 
                 // Increases mass of object if powerup is active
@@ -143,6 +154,16 @@ public class PlayerController : MonoBehaviour
         {
             rbObject.isKinematic = false;
             colObject.enabled = true;
+
+            if (objectInHands.transform.childCount > 0)
+            {
+                colChild.enabled = true;
+            }
+
+            if (objectInHands.layer == 6)
+            {
+                rendObject.material.SetColor("_Color", Color.white); // Might need rework?
+            }
 
             objectInHands.transform.parent = null;
 
@@ -171,7 +192,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground")) // REWORK NEEDED
         {
             isGrounded = true;
         }

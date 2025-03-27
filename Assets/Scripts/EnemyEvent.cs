@@ -24,7 +24,7 @@ public class EnemyEvent : MonoBehaviour
     private IEnumerator Invasion()
     {
         Instantiate(enemyPrefab, spawnOne.transform);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         Instantiate(enemyPrefab, spawnTwo.transform);
     }
 }
