@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using Debug = UnityEngine.Debug;
 
 public class PlayerController : MonoBehaviour
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private float horizontalVelocity;
     private float verticalVelocity;
 
-    public float jumpForce = 10.0f;
+    public float jumpForce = 14.0f;
     private bool spaceDown = false;
     private bool isJumping = false;
     private bool isGrounded;
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private GameObject objectInHands;
     private Rigidbody rbObject;
     private Collider colObject;
+    private NavMeshAgent navEnemy;
     private bool pickupButton;
     private bool dropButton;
     private bool hasObject = false;
@@ -39,7 +41,8 @@ public class PlayerController : MonoBehaviour
     {
         rbPlayer = GetComponent<Rigidbody>();
         playerHands = gameObject.transform.GetChild(0);
-        pickableLayerMask = LayerMask.GetMask("Pickable"); // SET EVERY OBJECT THAT CAN BE PICKED UP UNDER "Pickable" LAYER
+        // Set every object that can be picked up in "Pickable" and every enemy in "Enemy"
+        pickableLayerMask = LayerMask.GetMask("Pickable") | LayerMask.GetMask("Enemy");
     }
 
     void Update()
@@ -83,9 +86,12 @@ public class PlayerController : MonoBehaviour
             doubleJump = false;
         }
 
-        // Player faces the direction they are moving in
-        Vector3 lookDirection = direction + gameObject.transform.position;
-        gameObject.transform.LookAt(lookDirection);
+        // Vector3 lookDirection = direction + gameObject.transform.position; OLD - instant turning
+        // Player faces the direction they are moving in with smooth turning
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.15f);
+        }
 
         // Object detection + pick up and drop object
         Vector3 fwd = transform.TransformDirection(Vector3.forward) + transform.up * -0.5f;
@@ -116,11 +122,17 @@ public class PlayerController : MonoBehaviour
                 rbObject.isKinematic = true;
                 colObject.enabled = false;
 
+                if (objectInHands.layer == 7) // "Enemy" layer
+                {
+                    navEnemy = objectInHands.GetComponent<NavMeshAgent>();
+                    navEnemy.enabled = false;
+                }
+
                 // Increases mass of object if powerup is active
                 if (massPowerup)
                 {
                     rbObject.mass = 40;
-                    // Probably should change how the object looks as well
+                    // Change how the object looks as well
                 }
 
                 hasObject = true;

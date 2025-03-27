@@ -9,11 +9,17 @@ public class AttachToPlatform : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        other.transform.SetParent(transform); // can set this under an if statement with CompareTag
+        if (!other.CompareTag("Untagged")) // Most likely temporary
+        {
+            other.transform.SetParent(transform);
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-        other.transform.SetParent(null);
+        if (!other.CompareTag("Untagged"))
+        {
+            other.transform.SetParent(null);
+        }
     }
 }

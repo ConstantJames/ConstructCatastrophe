@@ -5,10 +5,13 @@ public class GameManager : MonoBehaviour
 {
     public float EventsDelayTime = 10f;
 
+    private bool multiplayer = false;
     public GameObject playerTwo;
+    public GameObject spawnPoint;
 
     public EarthQuake earthQuake;
-    public WindEvent windEvent;    
+    public WindEvent windEvent;
+    public EnemyEvent enemyEvent;
 
     private void Start()
     {
@@ -24,9 +27,12 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Activate multiplayer - EXTREMELY basic implementation just for proof of concept, will revise later
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && !multiplayer)
         {
-            playerTwo.SetActive(true);
+            playerTwo.transform.position = spawnPoint.transform.position;
+            playerTwo.GetComponent<PlayerController>().enabled = true;
+
+            multiplayer = true;
         }
 
         // Exit game - Will implement into UI later
@@ -59,6 +65,7 @@ public class GameManager : MonoBehaviour
 
     void EventThree()
     {
+        enemyEvent.StartInvasion();
         Debug.Log("A.I. Engaged!");
     }
 }
