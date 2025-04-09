@@ -7,12 +7,24 @@ public class EnemyEvent : MonoBehaviour
     public GameObject spawnOne;
     public GameObject spawnTwo;
     public GameObject enemyPrefab;
+    public GameManager gameManager;
+
+    private void Start()
+    {
+        if (gameManager == null)
+        {
+            gameManager = FindAnyObjectByType<GameManager>();
+        }
+    }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        if (gameManager != null && gameManager.developerMode)
         {
-            StartCoroutine(Invasion());
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                StartCoroutine(Invasion());
+            }
         }
     }
 

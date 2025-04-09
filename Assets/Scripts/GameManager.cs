@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+    public bool developerMode = false;
     public float EventsDelayTime = 10f;
 
     private bool multiplayer = false;

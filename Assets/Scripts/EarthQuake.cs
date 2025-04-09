@@ -8,21 +8,30 @@ public class EarthQuake : MonoBehaviour
     public float EarthquakeDuration = 1.0f;  // Duration of the Earthquake in seconds
     public float EarthquakeFrequency = 0.1f; // Frequency of the Earthquake updates
     public float RotationIntensity = 0.2f;   // Rotation intensity in degrees
+    public GameManager gameManager;
 
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
     private void Start()
     {
+        if (gameManager == null)
+        {
+            gameManager = FindAnyObjectByType<GameManager>();
+        }
         originalPosition = transform.localPosition;
         originalRotation = transform.localRotation;
+
     }
 
-    private void Update()
+    public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (gameManager != null && gameManager.developerMode)
         {
-            StartCoroutine(Earthquake());
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                StartCoroutine(Earthquake());
+            }
         }
     }
 

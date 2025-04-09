@@ -10,7 +10,17 @@ public class WindEvent : MonoBehaviour
    // public GameObject windSpawn2;
     public float FanDuration = 1.0f;
     public float SpawnRate = 0.3f;
-                   
+
+    public GameManager gameManager;
+
+    private void Start()
+    {
+        if(gameManager == null)
+        {
+            gameManager = FindAnyObjectByType<GameManager>();
+        }
+    }
+
     public void StartWind()
     {
         StartCoroutine(WindBlow());
@@ -19,10 +29,13 @@ public class WindEvent : MonoBehaviour
     //vvv Manually trigger windPrefab spawn vvv
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if(gameManager != null && gameManager.developerMode)
         {
-            StartCoroutine(WindBlow());
-        }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                StartCoroutine(WindBlow());
+            }
+        }        
     }
 
     private IEnumerator WindBlow()
