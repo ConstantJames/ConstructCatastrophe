@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class KillZone : MonoBehaviour
 {
-    public GameObject spawnPoint;
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            other.transform.position = spawnPoint.transform.position;
-        }
-        else
+        if (!other.CompareTag("Player"))
         {
             Destroy(other.gameObject);
         }

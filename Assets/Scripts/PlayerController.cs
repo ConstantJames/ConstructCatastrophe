@@ -22,15 +22,19 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 14.0f;
     private bool spaceDown = false;
     private bool isJumping = false;
-    private bool isGrounded;
-    private bool doubleJump;
+    private bool wasGrounded = false;
+    private bool canDoubleJump;
+
+    private LayerMask groundLayerMask;
+    public float sphereSize = 2.0f;
+    public float maxDistance = 2.0f;
 
     private Transform playerHands;
     private GameObject objectInHands;
     private Rigidbody rbObject;
     private Collider colObject;
     private Renderer rendObject;
-    private BoxCollider colChild; // maybe temp
+    private BoxCollider colChild;
     private bool pickupButton;
     private bool dropButton;
     private bool hasObject = false;
@@ -38,56 +42,68 @@ public class PlayerController : MonoBehaviour
     public bool massPowerup = false;
     public bool jumpPowerup = false;
 
+    public GameObject spawnPointOne;
+    public GameObject spawnPointTwo;
+
     void Start()
     {
         rbPlayer = GetComponent<Rigidbody>();
         playerHands = gameObject.transform.GetChild(0);
         // Set every object that can be picked up in "Pickable" and every enemy in "Enemy"
         pickableLayerMask = LayerMask.GetMask("Pickable") | LayerMask.GetMask("Enemy");
+        groundLayerMask = LayerMask.GetMask("Ground") | LayerMask.GetMask("Pickable");
     }
 
     void Update()
     { 
         // Inputs
-        if (playerSelect == Player.One)
+        switch (playerSelect)
         {
-            horizontalVelocity = Input.GetAxis("Horizontal1");
-            verticalVelocity = Input.GetAxis("Vertical1");
-
-            spaceDown = Input.GetButtonDown("Jump1");
-
-            pickupButton = Input.GetKeyDown(KeyCode.J);
-            dropButton = Input.GetKeyDown(KeyCode.K);
-        }
-        else if (playerSelect == Player.Two)
-        {
-            horizontalVelocity = Input.GetAxis("Horizontal2");
-            verticalVelocity = Input.GetAxis("Vertical2");
-
-            spaceDown = Input.GetButtonDown("Jump2");
-
-            pickupButton = Input.GetKeyDown(KeyCode.Keypad1);
-            dropButton = Input.GetKeyDown(KeyCode.Keypad2);
+            case Player.One:
+                horizontalVelocity = Input.GetAxis("Horizontal1");
+                verticalVelocity = Input.GetAxis("Vertical1");
+                spaceDown = Input.GetButtonDown("Jump1");
+                pickupButton = Input.GetKeyDown(KeyCode.J);
+                dropButton = Input.GetKeyDown(KeyCode.K);
+                break;
+            case Player.Two:
+                horizontalVelocity = Input.GetAxis("Horizontal2");
+                verticalVelocity = Input.GetAxis("Vertical2");
+                spaceDown = Input.GetButtonDown("Jump2");
+                pickupButton = Input.GetKeyDown(KeyCode.Keypad1);
+                dropButton = Input.GetKeyDown(KeyCode.Keypad2);
+                break;
         }
 
         // Movement + Jumping
         direction = new Vector3(horizontalVelocity, 0, verticalVelocity).normalized;
 
+        if (wasGrounded && !GroundCheck() && jumpPowerup)
+        {
+            canDoubleJump = true;
+        }
+
         if (spaceDown)
         {
-            if (isGrounded || doubleJump)
+            if (GroundCheck() || canDoubleJump)
             {
                 isJumping = true;
-                isGrounded = false;
+
+                if (canDoubleJump)
+                {
+                    canDoubleJump = false;
+                }
             }
         }
 
-        if (isGrounded && !spaceDown)
+        if (GroundCheck() && jumpPowerup)
         {
-            doubleJump = false;
+            canDoubleJump = false;
         }
 
-        // Player faces the direction they are moving in with smooth turning
+        wasGrounded = GroundCheck();
+
+        // Player faces the direction they are moving in (smooth turning)
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.15f);
@@ -104,7 +120,7 @@ public class PlayerController : MonoBehaviour
         {   
             if (playerSelect == Player.One)
             {
-                Debug.Log("Player " + playerSelect + ": Object detected - Press E to pick up and Q to drop");
+                Debug.Log("Player " + playerSelect + ": Object detected - Press J to pick up and K to drop");
             }
             else
             {
@@ -182,32 +198,18 @@ public class PlayerController : MonoBehaviour
             rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             isJumping = false;
-
-            if (jumpPowerup)
-            {
-                doubleJump = !doubleJump;
-            }
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private bool GroundCheck()
     {
-        if (collision.gameObject.CompareTag("Ground")) // REWORK NEEDED
+        if (Physics.SphereCast(transform.position, sphereSize, -transform.up, out RaycastHit hit, maxDistance, groundLayerMask))
         {
-            isGrounded = true;
+            return true;
         }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
+        else
         {
-            isGrounded = false;
-
-            if (jumpPowerup)
-            {
-                doubleJump = true;
-            }
+            return false;
         }
     }
 
@@ -225,6 +227,33 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(JumpPowerUpCountdown());
             Destroy(other.gameObject); // can rework this if it breaks visuals
         }
+
+        if (other.gameObject.CompareTag("KillZone"))
+        {
+            if (colObject != null)
+            {
+                colObject.enabled = true;
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        // Respawning
+        if (other.gameObject.CompareTag("KillZone"))
+        {
+            switch (playerSelect)
+            {
+                case Player.One:
+                    transform.position = spawnPointOne.transform.position;
+                    break;
+                case Player.Two:
+                    transform.position = spawnPointTwo.transform.position;
+                    break;
+            }
+
+            hasObject = false;
+        }
     }
 
     IEnumerator MassPowerUpCountdown()
@@ -240,7 +269,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Jump Powerup activated - 30 seconds");
         yield return new WaitForSeconds(30);
         jumpPowerup = false;
-        doubleJump = false;
+        canDoubleJump = false;
         Debug.Log("Jump Powerup deactivated");
     }
 }

@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!agent.enabled && colEnemy.enabled && collision.gameObject.CompareTag("Ground"))
+        if (!agent.enabled && colEnemy.enabled && (collision.gameObject.layer == 8 || collision.gameObject.layer == 6))
         {
             agent.enabled = true;
             rbEnemy.isKinematic = true;

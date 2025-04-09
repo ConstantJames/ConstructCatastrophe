@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Ground
   - MassPowerup
   - JumpPowerup
   - Enemy
+  - KillZone
   layers:
   - Default
   - TransparentFX
@@ -17,7 +17,7 @@ TagManager:
   - UI
   - Pickable
   - Enemy
-  - 
+  - Ground
   - 
   - 
   - 

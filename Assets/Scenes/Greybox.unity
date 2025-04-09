@@ -575,7 +575,7 @@ Transform:
   m_GameObject: {fileID: 115968164}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.21, y: 3.5, z: -27.9}
+  m_LocalPosition: {x: 0, y: 3.5, z: -27.9}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -599,8 +599,12 @@ MonoBehaviour:
   playerSelect: 0
   speed: 10
   jumpForce: 14
+  sphereSize: 2
+  maxDistance: 2
   massPowerup: 0
   jumpPowerup: 0
+  spawnPointOne: {fileID: 1396189874}
+  spawnPointTwo: {fileID: 1870238011}
 --- !u!54 &115968170
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -844,8 +848,12 @@ MonoBehaviour:
   playerSelect: 1
   speed: 10
   jumpForce: 14
+  sphereSize: 2
+  maxDistance: 2
   massPowerup: 0
   jumpPowerup: 0
+  spawnPointOne: {fileID: 1396189874}
+  spawnPointTwo: {fileID: 1870238011}
 --- !u!54 &309246821
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1133,7 +1141,6 @@ GameObject:
   - component: {fileID: 365315581}
   - component: {fileID: 365315580}
   - component: {fileID: 365315579}
-  - component: {fileID: 365315578}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -1141,28 +1148,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &365315578
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 365315577}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &365315579
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1487,7 +1472,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 3.5
+  m_Radius: 3
   m_Center: {x: 0.0000076293945, y: 3.370917, z: -0.043824732}
 --- !u!135 &477843171
 SphereCollider:
@@ -1550,9 +1535,9 @@ GameObject:
   - component: {fileID: 567367206}
   - component: {fileID: 567367209}
   - component: {fileID: 567367210}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: test_buttonright
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1797,9 +1782,9 @@ GameObject:
   - component: {fileID: 659417176}
   - component: {fileID: 659417175}
   - component: {fileID: 659417180}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: test_belt_right
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2425,9 +2410,9 @@ GameObject:
   - component: {fileID: 1286026447}
   - component: {fileID: 1286026450}
   - component: {fileID: 1286026451}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: test_buttonleft
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2563,7 +2548,7 @@ Transform:
   m_GameObject: {fileID: 1396189874}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.21, y: 3.5, z: -27.9}
+  m_LocalPosition: {x: 0, y: 3.5, z: -27.9}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2881,7 +2866,7 @@ GameObject:
   - component: {fileID: 1486212643}
   m_Layer: 6
   m_Name: test_tri
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3060,9 +3045,9 @@ GameObject:
   - component: {fileID: 1560620514}
   - component: {fileID: 1560620518}
   - component: {fileID: 1560620519}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: test_floor
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3199,38 +3184,15 @@ GameObject:
   - component: {fileID: 1574666478}
   - component: {fileID: 1574666477}
   - component: {fileID: 1574666476}
-  - component: {fileID: 1574666475}
   - component: {fileID: 1574666479}
   - component: {fileID: 1574666480}
   m_Layer: 0
   m_Name: TheDangerPit
-  m_TagString: Untagged
+  m_TagString: KillZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &1574666475
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574666474}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1574666476
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3308,7 +3270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 429616e176d0f2548a404e2225116d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoint: {fileID: 1396189874}
 --- !u!65 &1574666480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3344,9 +3305,9 @@ GameObject:
   - component: {fileID: 1603520336}
   - component: {fileID: 1603520337}
   - component: {fileID: 1603520338}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Platform
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3699,7 +3660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EventsDelayTime: 10
   playerTwo: {fileID: 309246819}
-  spawnPoint: {fileID: 1396189874}
+  spawnPoint: {fileID: 1870238011}
   earthQuake: {fileID: 1560620518}
   windEvent: {fileID: 413639486}
   enemyEvent: {fileID: 638907646}
@@ -3823,6 +3784,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1870238011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1870238012}
+  m_Layer: 0
+  m_Name: SpawnPoint2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1870238012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870238011}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6, y: 3.5, z: -27.9}
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1922545344
 GameObject:
   m_ObjectHideFlags: 0
@@ -3928,9 +3920,9 @@ GameObject:
   - component: {fileID: 1983489625}
   - component: {fileID: 1983489624}
   - component: {fileID: 1983489629}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: test_belt_left
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4241,9 +4233,9 @@ GameObject:
   - component: {fileID: 2145546091}
   - component: {fileID: 2145546090}
   - component: {fileID: 2145546089}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4779,7 +4771,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 4
+  m_Radius: 3.5
   m_Center: {x: -0.010659695, y: 3.9431136, z: 0.028716996}
 --- !u!1001 &5783052988827555492
 PrefabInstance:
@@ -4857,7 +4849,7 @@ GameObject:
   - component: {fileID: 8311557885351437587}
   m_Layer: 6
   m_Name: test_cylinder
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4892,7 +4884,7 @@ GameObject:
   - component: {fileID: 1261132889768889453}
   m_Layer: 6
   m_Name: test_cube
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4962,6 +4954,7 @@ SceneRoots:
   - {fileID: 1006016275}
   - {fileID: 380366629}
   - {fileID: 1396189875}
+  - {fileID: 1870238012}
   - {fileID: 115968168}
   - {fileID: 309246825}
   - {fileID: 2116366104}
