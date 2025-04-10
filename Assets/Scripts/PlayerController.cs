@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
 
     public float speed = 10.0f;
     private Vector3 direction;
-    private float horizontalVelocity;
-    private float verticalVelocity;
+    public float horizontalVelocity;
+    public float verticalVelocity;
 
     public float jumpForce = 14.0f;
     private bool spaceDown = false;
@@ -132,7 +132,6 @@ public class PlayerController : MonoBehaviour
                 objectInHands = hit.transform.gameObject;
                 rbObject = objectInHands.GetComponent<Rigidbody>();
                 colObject = objectInHands.GetComponent<Collider>();
-                rendObject = objectInHands.GetComponent<Renderer>();
 
                 objectInHands.transform.position = playerHands.transform.position;
                 objectInHands.transform.parent = playerHands.transform;
@@ -141,6 +140,7 @@ public class PlayerController : MonoBehaviour
 
                 if (objectInHands.layer == 6) // for objects
                 {
+                    rendObject = objectInHands.GetComponent<Renderer>();
                     rendObject.material.SetColor("_Color", Color.green);
                 }
                 else // for enemies

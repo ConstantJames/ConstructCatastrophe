@@ -27,7 +27,7 @@ public class Wind : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Ground")
+        if (other.gameObject.tag == "Untagged")
         {
             other.GetComponent<Rigidbody>().AddForce(transform.position * Force, ForceMode.Impulse);
         }
