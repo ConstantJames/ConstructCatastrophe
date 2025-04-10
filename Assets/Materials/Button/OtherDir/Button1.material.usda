@@ -1,0 +1,241 @@
+#usda 1.0
+(
+    "Exported from Adobe Substance 3D Painter 9.1.2"
+    defaultPrim = "RootNode"
+)
+
+def "RootNode"
+{
+    def Scope "material"
+    {
+        def Material "standardSurface1" (
+            customData = {
+                dictionary adobe = {
+                    dictionary painter = {
+                        asset painterProject_spp = @E:/Button1.spp@
+                    }
+                }
+            }
+        )
+        {
+            asset inputs:basecolor_tex = @Button1_textures/standardSurface1_BaseColor.png@
+            asset inputs:compositedNormalGL_tex = @Button1_textures/standardSurface1_Normal.png@
+            asset inputs:emissive_tex = @Button1_textures/standardSurface1_Emission.png@
+            asset inputs:height_tex = @Button1_textures/standardSurface1_Displacement.png@
+            asset inputs:metallic_tex = @Button1_textures/standardSurface1_Metallic.png@
+            asset inputs:opacity_tex = @Button1_textures/standardSurface1_Alpha.png@
+            asset inputs:roughness_tex = @Button1_textures/standardSurface1_Roughness.png@
+            token outputs:displacement.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:displacement>
+            token outputs:surface.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:surface>
+
+            def NodeGraph "UsdPreviewSurface"
+            {
+                def Shader "ShaderUsdPreviewSurface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    float3 inputs:diffuseColor.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/diffuseColorTextureShader.outputs:rgb>
+                    float3 inputs:emissive.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/emissiveTextureShader.outputs:rgb>
+                    float inputs:metallic.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/metallicTextureShader.outputs:r>
+                    normal3f inputs:normal.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/normalTextureShader.outputs:rgb>
+                    float inputs:opacity.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/opacityTextureShader.outputs:r>
+                    float inputs:roughness.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/roughnessTextureShader.outputs:r>
+                    token outputs:displacement
+                    token outputs:surface
+                }
+
+                def Shader "TexCoordReader"
+                {
+                    uniform token info:id = "UsdPrimvarReader_float2"
+                    token inputs:varname = "st"
+                    float2 outputs:result
+                }
+
+                def Shader "diffuseColorTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/standardSurface1.inputs:basecolor_tex>
+                    float2 inputs:st.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float3 outputs:rgb
+                }
+
+                def Shader "roughnessTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/standardSurface1.inputs:roughness_tex>
+                    float2 inputs:st.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "metallicTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/standardSurface1.inputs:metallic_tex>
+                    float2 inputs:st.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "emissiveTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/standardSurface1.inputs:emissive_tex>
+                    float2 inputs:st.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float3 outputs:rgb
+                }
+
+                def Shader "opacityTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/standardSurface1.inputs:opacity_tex>
+                    float2 inputs:st.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "normalTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    float4 inputs:bias = (-1, -1, -1, 0)
+                    asset inputs:file.connect = </RootNode/material/standardSurface1.inputs:compositedNormalGL_tex>
+                    float4 inputs:scale = (2, 2, 2, 1)
+                    float2 inputs:st.connect = </RootNode/material/standardSurface1/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    normal3f outputs:rgb
+                }
+            }
+        }
+
+        def Material "ButtonTop" (
+            customData = {
+                dictionary adobe = {
+                    dictionary painter = {
+                        asset painterProject_spp = @E:/Button1.spp@
+                    }
+                }
+            }
+        )
+        {
+            asset inputs:basecolor_tex = @Button1_textures/ButtonTop_BaseColor.png@
+            asset inputs:compositedNormalGL_tex = @Button1_textures/ButtonTop_Normal.png@
+            asset inputs:emissive_tex = @Button1_textures/ButtonTop_Emission.png@
+            asset inputs:height_tex = @Button1_textures/ButtonTop_Displacement.png@
+            asset inputs:metallic_tex = @Button1_textures/ButtonTop_Metallic.png@
+            asset inputs:opacity_tex = @Button1_textures/ButtonTop_Alpha.png@
+            asset inputs:roughness_tex = @Button1_textures/ButtonTop_Roughness.png@
+            token outputs:displacement.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:displacement>
+            token outputs:surface.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:surface>
+
+            def NodeGraph "UsdPreviewSurface"
+            {
+                def Shader "ShaderUsdPreviewSurface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    float3 inputs:diffuseColor.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/diffuseColorTextureShader.outputs:rgb>
+                    float3 inputs:emissive.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/emissiveTextureShader.outputs:rgb>
+                    float inputs:metallic.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/metallicTextureShader.outputs:r>
+                    normal3f inputs:normal.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/normalTextureShader.outputs:rgb>
+                    float inputs:opacity.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/opacityTextureShader.outputs:r>
+                    float inputs:roughness.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/roughnessTextureShader.outputs:r>
+                    token outputs:displacement
+                    token outputs:surface
+                }
+
+                def Shader "TexCoordReader"
+                {
+                    uniform token info:id = "UsdPrimvarReader_float2"
+                    token inputs:varname = "st"
+                    float2 outputs:result
+                }
+
+                def Shader "diffuseColorTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/ButtonTop.inputs:basecolor_tex>
+                    float2 inputs:st.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float3 outputs:rgb
+                }
+
+                def Shader "roughnessTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/ButtonTop.inputs:roughness_tex>
+                    float2 inputs:st.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "metallicTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/ButtonTop.inputs:metallic_tex>
+                    float2 inputs:st.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "emissiveTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/ButtonTop.inputs:emissive_tex>
+                    float2 inputs:st.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float3 outputs:rgb
+                }
+
+                def Shader "opacityTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/ButtonTop.inputs:opacity_tex>
+                    float2 inputs:st.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "normalTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    float4 inputs:bias = (-1, -1, -1, 0)
+                    asset inputs:file.connect = </RootNode/material/ButtonTop.inputs:compositedNormalGL_tex>
+                    float4 inputs:scale = (2, 2, 2, 1)
+                    float2 inputs:st.connect = </RootNode/material/ButtonTop/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    normal3f outputs:rgb
+                }
+            }
+        }
+    }
+}
+
+over "Button"
+{
+    over "Button" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </RootNode/material/standardSurface1>
+    }
+
+    over "Button_1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </RootNode/material/ButtonTop>
+    }
+}
+

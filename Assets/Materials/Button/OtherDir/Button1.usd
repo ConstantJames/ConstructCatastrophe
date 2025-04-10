@@ -1,0 +1,15 @@
+#usda 1.0
+(
+    "Exported from Adobe Substance 3D Painter 9.1.2"
+    defaultPrim = "RootNode"
+    subLayers = [
+        @./Button1.material.usda@
+    ]
+)
+
+def "RootNode" (
+    prepend references = @./Button1.geo.usd@
+)
+{
+}
+
