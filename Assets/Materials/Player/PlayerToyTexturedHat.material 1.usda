@@ -1,0 +1,225 @@
+#usda 1.0
+(
+    "Exported from Adobe Substance 3D Painter 9.1.2"
+    defaultPrim = "RootNode"
+)
+
+def "RootNode"
+{
+    def Scope "material"
+    {
+        def Material "PlayerBodyColor" (
+            customData = {
+                dictionary adobe = {
+                    dictionary painter = {
+                        asset painterProject_spp = @E:/PlayerToyTexturedHat.spp@
+                    }
+                }
+            }
+        )
+        {
+            asset inputs:compositedAmbientOcclusion_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerBodyColor_MaskMap.png@
+            asset inputs:compositedNormalGL_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerBodyColor_Normal.png@
+            asset inputs:emissive_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerBodyColor_Emissive.png@
+            asset inputs:metallic_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerBodyColor_MaskMap.png@
+            asset inputs:opacity_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerBodyColor_BaseMap.png@
+            token outputs:displacement.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:displacement>
+            token outputs:surface.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:surface>
+
+            def NodeGraph "UsdPreviewSurface"
+            {
+                def Shader "ShaderUsdPreviewSurface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    float3 inputs:emissive.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/emissiveTextureShader.outputs:rgb>
+                    float inputs:metallic.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/metallicTextureShader.outputs:r>
+                    normal3f inputs:normal.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/normalTextureShader.outputs:rgb>
+                    float inputs:occlusion.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/occlusionTextureShader.outputs:g>
+                    float inputs:opacity.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/opacityTextureShader.outputs:a>
+                    token outputs:displacement
+                    token outputs:surface
+                }
+
+                def Shader "TexCoordReader"
+                {
+                    uniform token info:id = "UsdPrimvarReader_float2"
+                    token inputs:varname = "st"
+                    float2 outputs:result
+                }
+
+                def Shader "metallicTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerBodyColor.inputs:metallic_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "emissiveTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerBodyColor.inputs:emissive_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float3 outputs:rgb
+                }
+
+                def Shader "opacityTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerBodyColor.inputs:opacity_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:a
+                }
+
+                def Shader "occlusionTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerBodyColor.inputs:compositedAmbientOcclusion_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:g
+                }
+
+                def Shader "normalTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    float4 inputs:bias = (-1, -1, -1, 0)
+                    asset inputs:file.connect = </RootNode/material/PlayerBodyColor.inputs:compositedNormalGL_tex>
+                    float4 inputs:scale = (2, 2, 2, 1)
+                    float2 inputs:st.connect = </RootNode/material/PlayerBodyColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    normal3f outputs:rgb
+                }
+            }
+        }
+
+        def Material "PlayerHeadColor" (
+            customData = {
+                dictionary adobe = {
+                    dictionary painter = {
+                        asset painterProject_spp = @E:/PlayerToyTexturedHat.spp@
+                    }
+                }
+            }
+        )
+        {
+            asset inputs:compositedAmbientOcclusion_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerHeadColor_MaskMap.png@
+            asset inputs:compositedNormalGL_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerHeadColor_Normal.png@
+            asset inputs:emissive_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerHeadColor_Emissive.png@
+            asset inputs:metallic_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerHeadColor_MaskMap.png@
+            asset inputs:opacity_tex = @PlayerToyTexturedHat_textures/ToyPlayer3_PlayerHeadColor_BaseMap.png@
+            token outputs:displacement.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:displacement>
+            token outputs:surface.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/ShaderUsdPreviewSurface.outputs:surface>
+
+            def NodeGraph "UsdPreviewSurface"
+            {
+                def Shader "ShaderUsdPreviewSurface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    float3 inputs:emissive.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/emissiveTextureShader.outputs:rgb>
+                    float inputs:metallic.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/metallicTextureShader.outputs:r>
+                    normal3f inputs:normal.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/normalTextureShader.outputs:rgb>
+                    float inputs:occlusion.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/occlusionTextureShader.outputs:g>
+                    float inputs:opacity.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/opacityTextureShader.outputs:a>
+                    token outputs:displacement
+                    token outputs:surface
+                }
+
+                def Shader "TexCoordReader"
+                {
+                    uniform token info:id = "UsdPrimvarReader_float2"
+                    token inputs:varname = "st"
+                    float2 outputs:result
+                }
+
+                def Shader "metallicTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerHeadColor.inputs:metallic_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:r
+                }
+
+                def Shader "emissiveTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerHeadColor.inputs:emissive_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float3 outputs:rgb
+                }
+
+                def Shader "opacityTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerHeadColor.inputs:opacity_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:a
+                }
+
+                def Shader "occlusionTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    asset inputs:file.connect = </RootNode/material/PlayerHeadColor.inputs:compositedAmbientOcclusion_tex>
+                    float2 inputs:st.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    float outputs:g
+                }
+
+                def Shader "normalTextureShader"
+                {
+                    uniform token info:id = "UsdUVTexture"
+                    float4 inputs:bias = (-1, -1, -1, 0)
+                    asset inputs:file.connect = </RootNode/material/PlayerHeadColor.inputs:compositedNormalGL_tex>
+                    float4 inputs:scale = (2, 2, 2, 1)
+                    float2 inputs:st.connect = </RootNode/material/PlayerHeadColor/UsdPreviewSurface/TexCoordReader.outputs:result>
+                    token inputs:wrapS = "repeat"
+                    token inputs:wrapT = "repeat"
+                    normal3f outputs:rgb
+                }
+            }
+        }
+    }
+
+    over "ToyBody"
+    {
+        over "ToyBody" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </RootNode/material/PlayerBodyColor>
+        }
+
+        over "ToyBody_1" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </RootNode/material/PlayerHeadColor>
+        }
+    }
+
+    over "Helmet"
+    {
+        over "Helmet" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </RootNode/material/PlayerBodyColor>
+        }
+    }
+}
+
