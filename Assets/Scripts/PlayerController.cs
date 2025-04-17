@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool wasGrounded = false;
     private bool canDoubleJump;
+    public bool playerThrown;
 
     private LayerMask groundLayerMask;
     public float sphereSize = 2.0f;
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviour
         playerHands = gameObject.transform.GetChild(0);
 
         // Set every object that can be picked up in "Pickable" and every enemy in "Enemy"
-        pickableLayerMask = LayerMask.GetMask("Pickable") | LayerMask.GetMask("Enemy");
+        pickableLayerMask = LayerMask.GetMask("Pickable") | LayerMask.GetMask("Enemy") | LayerMask.GetMask("Player");
         groundLayerMask = LayerMask.GetMask("Ground") | LayerMask.GetMask("Pickable");
     }
 
@@ -115,6 +116,11 @@ public class PlayerController : MonoBehaviour
 
         wasGrounded = GroundCheck();
 
+        if (playerThrown && GroundCheck())
+        {
+            playerThrown = false;
+        }
+
         // Player faces the direction they are moving in (smooth turning)
         if (direction != Vector3.zero)
         {
@@ -146,7 +152,7 @@ public class PlayerController : MonoBehaviour
                     Color transparent = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 0.5f);
                     rendObject.material.SetColor("_Color", transparent);
                 }
-                else // for enemies
+                else if (objectInHands.layer == 7) // for enemies
                 {
                     NavMeshAgent navEnemy = objectInHands.GetComponent<NavMeshAgent>();
                     navEnemy.enabled = false;
@@ -185,25 +191,30 @@ public class PlayerController : MonoBehaviour
 
         if (dropReleased && hasObject)
         {
-            timePressed = Time.time - startTime;
-
-            if (timePressed > 2.0f)
-            {
-                timePressed = 2.0f;
-            }
-
             rbObject.isKinematic = false;
             colObject.enabled = true;
-
-            if (objectInHands.transform.childCount > 0)
-            {
-                colChild.enabled = true;
-            }
 
             if (objectInHands.layer == 6)
             {
                 Color original = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 1.0f);
                 rendObject.material.SetColor("_Color", original);
+            }
+            else if ((objectInHands.layer == 7) && (objectInHands.transform.childCount > 0))
+            {
+                colChild.enabled = true;
+            }
+            else if (objectInHands.layer == 9) // for players
+            {
+                PlayerController playerController = objectInHands.GetComponent<PlayerController>();
+                playerController.playerThrown = true;
+            }
+
+            // Checks how long button is held down for, throws if held for 0.5 seconds
+            timePressed = Time.time - startTime;
+
+            if (timePressed > 2.0f)
+            {
+                timePressed = 2.0f;
             }
 
             if (timePressed > 0.5f)
@@ -225,14 +236,17 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // Movement + Jumping
-        rbPlayer.velocity = new Vector3(direction.x * speed, rbPlayer.velocity.y, direction.z * speed);
-
-        if (isJumping)
+        if (!playerThrown)
         {
-            rbPlayer.velocity = new Vector3(rbPlayer.velocity.x, 0, rbPlayer.velocity.z);
-            rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rbPlayer.velocity = new Vector3(direction.x * speed, rbPlayer.velocity.y, direction.z * speed);
 
-            isJumping = false;
+            if (isJumping)
+            {
+                rbPlayer.velocity = new Vector3(rbPlayer.velocity.x, 0, rbPlayer.velocity.z);
+                rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+                isJumping = false;
+            }
         }
     }
 

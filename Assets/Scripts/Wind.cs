@@ -27,7 +27,7 @@ public class Wind : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Untagged")
+        if (other.gameObject.tag == "Pickable")
         {
             other.GetComponent<Rigidbody>().AddForce(transform.position * Force, ForceMode.Impulse);
         }

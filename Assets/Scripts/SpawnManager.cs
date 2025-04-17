@@ -20,6 +20,6 @@ public class SpawnManager : MonoBehaviour
 
         currentObject = objects[randomObject];
 
-        Instantiate(currentObject, transform.position, transform.rotation);
+        Instantiate(currentObject, transform.position, currentObject.transform.rotation);
     }
 }
