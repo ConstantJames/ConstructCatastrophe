@@ -9,7 +9,7 @@ public class AttachToPlatform : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Untagged"))
+        if (other.CompareTag("Pickable"))
         {
             other.transform.SetParent(transform);
         }
@@ -17,7 +17,7 @@ public class AttachToPlatform : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Untagged"))
+        if (other.CompareTag("Pickable"))
         {
             other.transform.SetParent(null);
         }

@@ -8,6 +8,7 @@ TagManager:
   - JumpPowerup
   - Enemy
   - KillZone
+  - Pickable
   layers:
   - Default
   - TransparentFX

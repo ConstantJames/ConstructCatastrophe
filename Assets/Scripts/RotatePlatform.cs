@@ -10,6 +10,7 @@ public class RotatePlatform : MonoBehaviour
 
     private bool isOnButton = false;
     public float rotationSpeed = 15.0f;
+    public GameObject objectOnButton;
 
     public enum RotationDirection
     {
@@ -28,17 +29,29 @@ public class RotatePlatform : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        if (other.CompareTag("Player") || other.CompareTag("Enemy") || other.CompareTag("Pickable"))
         {
-            isOnButton = true;
+            StartRotation(other.gameObject);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        if (other.CompareTag("Player") || other.CompareTag("Enemy") || other.CompareTag("Pickable"))
         {
-            isOnButton = false;
+            StopRotation();
         }
+    }
+
+    public void StartRotation(GameObject obj)
+    {
+        isOnButton = true;
+        objectOnButton = obj;
+    }
+
+    public void StopRotation()
+    {
+        isOnButton = false;
+        objectOnButton = null;
     }
 }

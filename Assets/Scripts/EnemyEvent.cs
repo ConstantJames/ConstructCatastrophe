@@ -35,30 +35,40 @@ public class EnemyEvent : MonoBehaviour
         StartCoroutine(Invasion());
     }
 
-    private IEnumerator Invasion()
+    private void ClearList()
     {
-        // Spawns enemies, limits how many can be active at one time (4)
+        // Removes destroyed objects from the list of enemies
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i] != null)
+            if (enemies[i] == null)
             {
-                continue;
+                enemies.RemoveAt(i);
+                i--;
             }
             else
             {
-                enemies.RemoveAt(i);
+                continue;
             }
+        }
+    }
+
+    private IEnumerator Invasion()
+    {
+        // Spawns enemies, limits how many can be active at one time (4)
+        ClearList();
+
+        if (enemies.Count < 4)
+        {
+            GameObject newEnemy = Instantiate(enemyPrefab, spawnOne.transform);
+            enemies.Add(newEnemy);
         }
 
         if (enemies.Count < 4)
         {
-            GameObject newEnemyOne = Instantiate(enemyPrefab, spawnOne.transform);
-            enemies.Add(newEnemyOne);
-
             yield return new WaitForSeconds(1);
 
-            GameObject newEnemyTwo = Instantiate(enemyPrefab, spawnTwo.transform);
-            enemies.Add(newEnemyTwo);
+            GameObject newEnemy = Instantiate(enemyPrefab, spawnTwo.transform);
+            enemies.Add(newEnemy);
         }
     }
 }

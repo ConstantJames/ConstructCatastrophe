@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
 
     public float speed = 10.0f;
     private Vector3 direction;
-    public float horizontalVelocity;
-    public float verticalVelocity;
+    private float horizontalVelocity;
+    private float verticalVelocity;
 
     public float jumpForce = 14.0f;
     private bool spaceDown = false;
@@ -29,18 +29,27 @@ public class PlayerController : MonoBehaviour
     public float sphereSize = 2.0f;
     public float maxDistance = 2.0f;
 
+    private float startTime;
+    private float timePressed;
+
     private Transform playerHands;
     private GameObject objectInHands;
     private Rigidbody rbObject;
     private Collider colObject;
     private Renderer rendObject;
     private BoxCollider colChild;
+    public Material metalMat;
+
     private bool pickupButton;
     private bool dropButton;
+    private bool dropReleased;
     private bool hasObject = false;
 
     public bool massPowerup = false;
     public bool jumpPowerup = false;
+
+    public RotatePlatform rotatePlatformLeft;
+    public RotatePlatform rotatePlatformRight;
 
     public GameObject spawnPointOne;
     public GameObject spawnPointTwo;
@@ -49,13 +58,14 @@ public class PlayerController : MonoBehaviour
     {
         rbPlayer = GetComponent<Rigidbody>();
         playerHands = gameObject.transform.GetChild(0);
+
         // Set every object that can be picked up in "Pickable" and every enemy in "Enemy"
         pickableLayerMask = LayerMask.GetMask("Pickable") | LayerMask.GetMask("Enemy");
         groundLayerMask = LayerMask.GetMask("Ground") | LayerMask.GetMask("Pickable");
     }
 
     void Update()
-    { 
+    {
         // Inputs
         switch (playerSelect)
         {
@@ -65,6 +75,7 @@ public class PlayerController : MonoBehaviour
                 spaceDown = Input.GetButtonDown("Jump1");
                 pickupButton = Input.GetKeyDown(KeyCode.J);
                 dropButton = Input.GetKeyDown(KeyCode.K);
+                dropReleased = Input.GetKeyUp(KeyCode.K);
                 break;
             case Player.Two:
                 horizontalVelocity = Input.GetAxis("Horizontal2");
@@ -72,6 +83,7 @@ public class PlayerController : MonoBehaviour
                 spaceDown = Input.GetButtonDown("Jump2");
                 pickupButton = Input.GetKeyDown(KeyCode.Keypad1);
                 dropButton = Input.GetKeyDown(KeyCode.Keypad2);
+                dropReleased = Input.GetKeyUp(KeyCode.Keypad2);
                 break;
         }
 
@@ -111,22 +123,12 @@ public class PlayerController : MonoBehaviour
 
         // Object detection + pick up and drop object
         Vector3 fwd = transform.TransformDirection(Vector3.forward) + transform.up * -0.5f;
-
-        Debug.DrawRay(transform.position, fwd * 10, Color.yellow); // Visible raycast in Scene view during play
+        // Debug.DrawRay(transform.position, fwd * 10, Color.yellow);
 
         RaycastHit hit;
 
         if (Physics.Raycast(transform.position, fwd, out hit, 10, pickableLayerMask))
-        {   
-            if (playerSelect == Player.One)
-            {
-                Debug.Log("Player " + playerSelect + ": Object detected - Press J to pick up and K to drop");
-            }
-            else
-            {
-                Debug.Log("Player " + playerSelect + ": Object detected - Press Numpad1 to pick up and Numpad2 to drop");
-            }
-
+        {
             if (pickupButton && !hasObject)
             {
                 objectInHands = hit.transform.gameObject;
@@ -141,7 +143,8 @@ public class PlayerController : MonoBehaviour
                 if (objectInHands.layer == 6) // for objects
                 {
                     rendObject = objectInHands.GetComponent<Renderer>();
-                    rendObject.material.SetColor("_Color", Color.green);
+                    Color transparent = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 0.5f);
+                    rendObject.material.SetColor("_Color", transparent);
                 }
                 else // for enemies
                 {
@@ -155,11 +158,20 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
+                if (objectInHands == rotatePlatformLeft.objectOnButton)
+                {
+                    rotatePlatformLeft.StopRotation();
+                }
+                else if (objectInHands == rotatePlatformRight.objectOnButton)
+                {
+                    rotatePlatformRight.StopRotation();
+                }
+
                 // Increases mass of object if powerup is active
                 if (massPowerup)
                 {
                     rbObject.mass = 40;
-                    // Change how the object looks as well
+                    rendObject.material = metalMat;
                 }
 
                 hasObject = true;
@@ -168,6 +180,18 @@ public class PlayerController : MonoBehaviour
 
         if (dropButton && hasObject)
         {
+            startTime = Time.time;
+        }
+
+        if (dropReleased && hasObject)
+        {
+            timePressed = Time.time - startTime;
+
+            if (timePressed > 2.0f)
+            {
+                timePressed = 2.0f;
+            }
+
             rbObject.isKinematic = false;
             colObject.enabled = true;
 
@@ -178,10 +202,21 @@ public class PlayerController : MonoBehaviour
 
             if (objectInHands.layer == 6)
             {
-                rendObject.material.SetColor("_Color", Color.white); // Might need rework?
+                Color original = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 1.0f);
+                rendObject.material.SetColor("_Color", original);
             }
 
-            objectInHands.transform.parent = null;
+            if (timePressed > 0.5f)
+            {
+                Vector3 throwVelocity = (transform.forward * timePressed * 9.0f) + (transform.up * timePressed * 5.0f);
+                rbObject.velocity = throwVelocity;
+
+                objectInHands.transform.parent = null;
+            }
+            else
+            {
+                objectInHands.transform.parent = null;
+            }
 
             hasObject = false;
         }
@@ -219,13 +254,13 @@ public class PlayerController : MonoBehaviour
         {
             massPowerup = true;
             StartCoroutine(MassPowerUpCountdown());
-            Destroy(other.gameObject); // can rework this if it breaks visuals
+            Destroy(other.gameObject);
         }
         else if (other.gameObject.CompareTag("JumpPowerup"))
         {
             jumpPowerup = true;
             StartCoroutine(JumpPowerUpCountdown());
-            Destroy(other.gameObject); // can rework this if it breaks visuals
+            Destroy(other.gameObject);
         }
 
         if (other.gameObject.CompareTag("KillZone"))
