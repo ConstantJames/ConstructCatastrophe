@@ -17,9 +17,16 @@ public class SpawnManager : MonoBehaviour
     void SpawnObject()
     {
         int randomObject = Random.Range(0, objects.Length);
-
         currentObject = objects[randomObject];
 
-        Instantiate(currentObject, transform.position, currentObject.transform.rotation);
+        GameObject newObject = Instantiate(currentObject, transform.position, currentObject.transform.rotation);
+
+        if (newObject.layer == 6)
+        {
+            Renderer objectRenderer = newObject.GetComponent<Renderer>();
+            Color randomColor = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+
+            objectRenderer.material.color = randomColor;
+        }
     }
 }

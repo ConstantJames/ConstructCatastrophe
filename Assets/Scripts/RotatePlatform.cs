@@ -8,9 +8,8 @@ public class RotatePlatform : MonoBehaviour
     // Create empty object to set as a parent of the platform. Scale (1, 1, 1) and assign to platform variable
     public Transform platform;
 
-    private bool isOnButton = false;
     public float rotationSpeed = 15.0f;
-    public GameObject objectOnButton;
+    public List<GameObject> objectsOnButton = new List<GameObject>();
 
     public enum RotationDirection
     {
@@ -21,7 +20,7 @@ public class RotatePlatform : MonoBehaviour
 
     void Update()
     {
-        if (isOnButton)
+        if (objectsOnButton.Count > 0)
         {
             platform.transform.Rotate(Vector3.up * (rotationSpeed * Time.deltaTime * (int)direction));
         }
@@ -31,7 +30,7 @@ public class RotatePlatform : MonoBehaviour
     {
         if (other.CompareTag("Player") || other.CompareTag("Enemy") || other.CompareTag("Pickable"))
         {
-            StartRotation(other.gameObject);
+            objectsOnButton.Add(other.gameObject);
         }
     }
 
@@ -39,19 +38,7 @@ public class RotatePlatform : MonoBehaviour
     {
         if (other.CompareTag("Player") || other.CompareTag("Enemy") || other.CompareTag("Pickable"))
         {
-            StopRotation();
+            objectsOnButton.Remove(other.gameObject);
         }
-    }
-
-    public void StartRotation(GameObject obj)
-    {
-        isOnButton = true;
-        objectOnButton = obj;
-    }
-
-    public void StopRotation()
-    {
-        isOnButton = false;
-        objectOnButton = null;
     }
 }

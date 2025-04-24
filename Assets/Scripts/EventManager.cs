@@ -15,6 +15,8 @@ public class EventsManager : MonoBehaviour
 
     private string eventName;
     public TextMeshProUGUI warningText;
+    private bool countdownStarted = false;
+    private float timer;
 
     private void Awake()
     {
@@ -28,6 +30,17 @@ public class EventsManager : MonoBehaviour
         }
 
         warningText.text = " ";
+    }
+
+    void Update()
+    {
+        if (countdownStarted)
+        {
+            timer -= Time.deltaTime;
+            int seconds = Mathf.FloorToInt(timer % 60);
+
+            warningText.text = eventName + " in " + seconds + " seconds!";
+        }
     }
 
     public List<Action> eventsList = new List<Action>();
@@ -57,13 +70,16 @@ public class EventsManager : MonoBehaviour
             // Ten second disaster warning
             yield return new WaitForSeconds(waitTime - 10);
 
-            warningText.text = eventName + " in 10 Seconds!";
+            timer = 10.0f;
+            countdownStarted = true;
 
             yield return new WaitForSeconds(10);
 
-            // Invokes random event
+            // Invokes random event when countdown hits 0
+            countdownStarted = false;
             eventsList[randomIndex]?.Invoke();
             warningText.text = " ";
+
         }
     }
 }
