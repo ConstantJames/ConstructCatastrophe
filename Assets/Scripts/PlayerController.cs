@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rbPlayer;
     private LayerMask pickableLayerMask;
 
+    public bool canMove = true;
     public float speed = 10.0f;
     private Vector3 direction;
     private float horizontalVelocity;
@@ -24,7 +25,6 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool wasGrounded = false;
     private bool canDoubleJump;
-    public bool playerThrown;
 
     private LayerMask groundLayerMask;
     public float sphereSize = 2.0f;
@@ -116,9 +116,9 @@ public class PlayerController : MonoBehaviour
 
         wasGrounded = GroundCheck();
 
-        if (playerThrown && GroundCheck())
+        if (!canMove && GroundCheck())
         {
-            playerThrown = false;
+            canMove = true;
         }
 
         // Player faces the direction they are moving in (smooth turning)
@@ -133,6 +133,11 @@ public class PlayerController : MonoBehaviour
 
         RaycastHit hit;
 
+        if (!canMove)
+        {
+            return;
+        }
+
         if (Physics.Raycast(transform.position, fwd, out hit, 10, pickableLayerMask))
         {
             if (pickupButton && !hasObject)
@@ -146,13 +151,13 @@ public class PlayerController : MonoBehaviour
                 rbObject.isKinematic = true;
                 colObject.enabled = false;
 
-                if (objectInHands.layer == 6) // for objects
+                if (objectInHands.layer == 6) // objects
                 {
                     rendObject = objectInHands.GetComponent<Renderer>();
                     Color transparent = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 0.5f);
                     rendObject.material.SetColor("_Color", transparent);
                 }
-                else if (objectInHands.layer == 7) // for enemies
+                else if (objectInHands.layer == 7) // enemies
                 {
                     NavMeshAgent navEnemy = objectInHands.GetComponent<NavMeshAgent>();
                     navEnemy.enabled = false;
@@ -162,6 +167,11 @@ public class PlayerController : MonoBehaviour
                         colChild = objectInHands.GetComponentInChildren<BoxCollider>();
                         colChild.enabled = false;
                     }
+                }
+                else if (objectInHands.layer == 9) // players
+                {
+                    PlayerController playerController = objectInHands.GetComponent<PlayerController>();
+                    playerController.canMove = false;
                 }
 
                 if (objectInHands == rotatePlatformLeft.objectOnButton)
@@ -203,11 +213,6 @@ public class PlayerController : MonoBehaviour
             {
                 colChild.enabled = true;
             }
-            else if (objectInHands.layer == 9) // for players
-            {
-                PlayerController playerController = objectInHands.GetComponent<PlayerController>();
-                playerController.playerThrown = true;
-            }
 
             // Checks how long button is held down for, throws if held for 0.5 seconds
             timePressed = Time.time - startTime;
@@ -235,18 +240,19 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Movement + Jumping
-        if (!playerThrown)
+        if (!canMove || rbPlayer.isKinematic)
         {
-            rbPlayer.velocity = new Vector3(direction.x * speed, rbPlayer.velocity.y, direction.z * speed);
+            return;
+        }
 
-            if (isJumping)
-            {
-                rbPlayer.velocity = new Vector3(rbPlayer.velocity.x, 0, rbPlayer.velocity.z);
-                rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rbPlayer.velocity = new Vector3(direction.x * speed, rbPlayer.velocity.y, direction.z * speed);
 
-                isJumping = false;
-            }
+        if (isJumping)
+        {
+            rbPlayer.velocity = new Vector3(rbPlayer.velocity.x, 0, rbPlayer.velocity.z);
+            rbPlayer.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            isJumping = false;
         }
     }
 

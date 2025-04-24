@@ -12,6 +12,7 @@ public class WindEvent : MonoBehaviour
     public float SpawnRate = 0.3f;
 
     public GameManager gameManager;
+    public Animator fanAnim;
 
     private void Start()
     {
@@ -45,11 +46,14 @@ public class WindEvent : MonoBehaviour
         while (elapsedTime<FanDuration)
         {
             elapsedTime += SpawnRate;
+            fanAnim.SetBool("FanAnimPlay", true);
+            yield return new WaitForSeconds(2); // Syncs instantiate with the animation of the fan spinning
             Instantiate(windPrefab1, windSpawn1.transform.position, windPrefab1.transform.rotation);
             //Instantiate(windPrefab2, windSpawn2.transform.position, windPrefab2.transform.rotation);
             yield return new WaitForSeconds(SpawnRate);
         }
-        
+
+        fanAnim.SetBool("FanAnimPlay", false);
         yield return null;
     }
 }
