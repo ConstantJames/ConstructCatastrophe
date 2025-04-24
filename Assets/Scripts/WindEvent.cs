@@ -7,7 +7,9 @@ public class WindEvent : MonoBehaviour
     public GameObject windPrefab1;
     //public GameObject windPrefab2;
     public GameObject windSpawn1;
-   // public GameObject windSpawn2;
+    // public GameObject windSpawn2;
+    public GameObject windParticle;
+    // Wind Particle Effect
     public float FanDuration = 1.0f;
     public float SpawnRate = 0.3f;
 
@@ -48,6 +50,7 @@ public class WindEvent : MonoBehaviour
             elapsedTime += SpawnRate;
             fanAnim.SetBool("FanAnimPlay", true);
             yield return new WaitForSeconds(2); // Syncs instantiate with the animation of the fan spinning
+            Instantiate(windParticle, windSpawn1.transform.position, windSpawn1.transform.rotation);
             Instantiate(windPrefab1, windSpawn1.transform.position, windPrefab1.transform.rotation);
             //Instantiate(windPrefab2, windSpawn2.transform.position, windPrefab2.transform.rotation);
             yield return new WaitForSeconds(SpawnRate);
