@@ -43,6 +43,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // *       VVVVVVVVVV WORK IN PROGRESS  VVVVVVVV    *
+    //                    SUBJECT TO DELETION
+    private void Devmode()
+    {
+        if (developerMode == true)
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                //Instantiate
+            }
+
+        }    
+    }
+
     private IEnumerator DelayEventManager()
     {
         // Wait for a specified amount of time 
