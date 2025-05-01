@@ -60,6 +60,10 @@ public class EnemyEvent : MonoBehaviour
         if (enemies.Count < 4)
         {
             GameObject newEnemy = Instantiate(enemyPrefab, spawnOne.transform);
+
+            Enemy enemy = newEnemy.GetComponent<Enemy>();
+            enemy.targetSelect = Enemy.Target.Players;
+
             enemies.Add(newEnemy);
         }
 
@@ -68,6 +72,14 @@ public class EnemyEvent : MonoBehaviour
             yield return new WaitForSeconds(1);
 
             GameObject newEnemy = Instantiate(enemyPrefab, spawnTwo.transform);
+
+            Enemy enemy = newEnemy.GetComponent<Enemy>();
+            enemy.targetSelect = Enemy.Target.Buttons;
+
+            Renderer enemyRend = newEnemy.GetComponent<Renderer>();
+            Color altEnemy = new Color(1.0f, 0.0f, 0.0f);
+            enemyRend.material.SetColor("_Color", altEnemy);
+
             enemies.Add(newEnemy);
         }
     }

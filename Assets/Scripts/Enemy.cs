@@ -1,34 +1,92 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    public enum Target { Players, Buttons };
+    public Target targetSelect;
+
     private NavMeshAgent agent;
     private Rigidbody rbEnemy;
     private Collider colEnemy;
 
-    private GameObject[] players;
     private GameObject target = null;
+    private GameObject[] players;
+    private GameObject[] buttons;
+    private int currentButton = 0;
+    private float moveCooldown = 7.5f;
+    private bool beginLoop = false;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         rbEnemy = GetComponent<Rigidbody>();
         colEnemy = GetComponent<Collider>();
-        players = GameObject.FindGameObjectsWithTag("Player");
-
-        target = players[0];
 
         agent.enabled = false;
         rbEnemy.isKinematic = false;
         transform.SetParent(null);
     }
 
+    void Start()
+    {
+        switch (targetSelect)
+        {
+            case Target.Players:
+                players = GameObject.FindGameObjectsWithTag("Player");
+                target = players[0];
+                break;
+            case Target.Buttons:
+                buttons = GameObject.FindGameObjectsWithTag("Rotate");
+                target = buttons[currentButton];
+                break;
+        }
+    }
+
     void Update()
     {
-        // Selects which player to go for - Will target the closest player
+        switch (targetSelect)
+        {
+            case Target.Players:
+                TargetClosestPlayer();
+                break;
+            case Target.Buttons:
+                if (beginLoop) { TargetButtons(); }
+                break;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (agent.enabled)
+        {
+            agent.SetDestination(target.transform.position);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!agent.enabled && colEnemy.enabled && (collision.gameObject.layer == 8 || collision.gameObject.layer == 6))
+        {
+            agent.enabled = true;
+            rbEnemy.isKinematic = true;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<RotatePlatform>() != null)
+        {
+            beginLoop = true;
+        }
+    }
+
+    void TargetClosestPlayer()
+    {
         if (agent.enabled)
         {
             float distanceToClosest = Vector3.Distance(target.transform.position, transform.position);
@@ -49,20 +107,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void TargetButtons()
     {
-        if (agent.enabled)
+        if (moveCooldown > 0.0f)
         {
-            agent.SetDestination(target.transform.position);
+            moveCooldown -= Time.deltaTime;
+            return;
         }
-    }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (!agent.enabled && colEnemy.enabled && (collision.gameObject.layer == 8 || collision.gameObject.layer == 6))
+        currentButton++;
+
+        if (currentButton > 1)
         {
-            agent.enabled = true;
-            rbEnemy.isKinematic = true;
+            currentButton = 0;
         }
+
+        target = buttons[currentButton];
+
+        moveCooldown = 7.5f;
     }
 }

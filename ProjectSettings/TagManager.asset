@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - KillZone
   - Pickable
+  - Rotate
   layers:
   - Default
   - TransparentFX
