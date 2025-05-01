@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private Collider colObject;
     private Renderer rendObject;
     private BoxCollider colChild;
-    public Material metalMat;
+    private List<GameObject> colorChanged = new List<GameObject>();
 
     private bool pickupButton;
     private bool dropButton;
@@ -129,9 +129,9 @@ public class PlayerController : MonoBehaviour
 
         // Object detection + pick up and drop object
         Vector3 fwd = transform.TransformDirection(Vector3.forward) + transform.up * -0.5f;
-        // Debug.DrawRay(transform.position, fwd * 10, Color.yellow);
 
         RaycastHit hit;
+        // Debug.DrawRay(transform.position, fwd * 10, Color.yellow);
 
         if (!canMove)
         {
@@ -154,6 +154,24 @@ public class PlayerController : MonoBehaviour
                 if (objectInHands.layer == 6) // objects
                 {
                     rendObject = objectInHands.GetComponent<Renderer>();
+
+                    // Increases mass of object if powerup is active
+                    if (massPowerup)
+                    {
+                        if (colorChanged.Count > 0) { ClearList(); }
+
+                        rbObject.mass = 40;
+
+                        if (!colorChanged.Contains(objectInHands))
+                        {
+                            Color dull = new Color(rendObject.material.color.r / 2, rendObject.material.color.g / 2, rendObject.material.color.b / 2);
+                            rendObject.material.SetColor("_Color", dull);
+
+                            colorChanged.Add(objectInHands);
+                        }
+                    }
+
+                    // Make objects transparent while in player's hands
                     Color transparent = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 0.5f);
                     rendObject.material.SetColor("_Color", transparent);
                 }
@@ -174,20 +192,13 @@ public class PlayerController : MonoBehaviour
                     playerController.canMove = false;
                 }
 
-                if (objectInHands == rotatePlatformLeft.objectOnButton)
+                if (rotatePlatformLeft.objectsOnButton.Contains(objectInHands))
                 {
-                    rotatePlatformLeft.StopRotation();
+                    rotatePlatformLeft.objectsOnButton.Remove(objectInHands);
                 }
-                else if (objectInHands == rotatePlatformRight.objectOnButton)
+                else if (rotatePlatformRight.objectsOnButton.Contains(objectInHands))
                 {
-                    rotatePlatformRight.StopRotation();
-                }
-
-                // Increases mass of object if powerup is active
-                if (massPowerup)
-                {
-                    rbObject.mass = 40;
-                    rendObject.material = metalMat;
+                    rotatePlatformRight.objectsOnButton.Remove(objectInHands);
                 }
 
                 hasObject = true;
@@ -265,6 +276,22 @@ public class PlayerController : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    private void ClearList()
+    {
+        for (int i = 0; i < colorChanged.Count; i++)
+        {
+            if (colorChanged[i] == null)
+            {
+                colorChanged.RemoveAt(i);
+                i--;
+            }
+            else
+            {
+                continue;
+            }
         }
     }
 
