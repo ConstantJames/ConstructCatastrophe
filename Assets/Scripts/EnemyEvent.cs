@@ -76,9 +76,9 @@ public class EnemyEvent : MonoBehaviour
             Enemy enemy = newEnemy.GetComponent<Enemy>();
             enemy.targetSelect = Enemy.Target.Buttons;
 
-            Renderer enemyRend = newEnemy.GetComponent<Renderer>();
-            Color altEnemy = new Color(1.0f, 0.0f, 0.0f);
-            enemyRend.material.SetColor("_Color", altEnemy);
+            //Renderer enemyRend = newEnemy.GetComponent<Renderer>();
+            //Color altEnemy = new Color(1.0f, 0.0f, 0.0f);
+            //enemyRend.material.SetColor("_Color", altEnemy);
 
             enemies.Add(newEnemy);
         }
