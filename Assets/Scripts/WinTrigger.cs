@@ -9,6 +9,7 @@ public class WinTrigger : MonoBehaviour
     public bool winCon = false;
 
     public GameManager gameManager;
+    public float winTime = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -17,20 +18,7 @@ public class WinTrigger : MonoBehaviour
         {
             gameManager = FindAnyObjectByType<GameManager>();
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (gameManager != null && gameManager.developerMode)
-        {
-            if (Input.GetKeyDown(KeyCode.CapsLock))
-            {
-                winCon = true;
-                Debug.Log("WIN CONDITION MET!!!");
-            }
-        }
-    }
+    }    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -58,12 +46,12 @@ public class WinTrigger : MonoBehaviour
         Debug.Log("Win Timer Started");
         winTimer = 0f;
 
-        while (winTimer < 3f)
+        while (winTimer < winTime)
         {
             winTimer += Time.deltaTime;
             yield return null;
         }
-        if (winTimer >= 3f)
+        if (winTimer >= winTime)
         {
             winCon = true;
             Debug.Log("WIN CONDITION MET!!!");
