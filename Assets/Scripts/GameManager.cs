@@ -6,16 +6,21 @@ public class GameManager : MonoBehaviour
     public bool developerMode = false;
     public float EventsDelayTime = 10f;
 
-    private bool multiplayer = false;
+    private bool multiplayer = false;     
+
     public GameObject playerTwo;
-    public GameObject spawnPoint;
+    public GameObject spawnPoint;    
 
     public EarthQuake earthQuake;
     public WindEvent windEvent;
     public EnemyEvent enemyEvent;
-
+    public WinTrigger winTrigger;
+    public GameObject winUI;
+    
     private void Start()
     {
+        winTrigger = FindObjectOfType<WinTrigger>();
+
         // vvv Add events to the list below vvv
         EventsManager.Instance.AddEvent(EventOne);
         EventsManager.Instance.AddEvent(EventTwo);
@@ -41,21 +46,27 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
-    }
-
-    // *       VVVVVVVVVV WORK IN PROGRESS  VVVVVVVV    *
-    //                    SUBJECT TO DELETION
-    private void Devmode()
-    {
-        if (developerMode == true)
+        if(winTrigger.winCon)
         {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                //Instantiate
-            }
+            StopGame();
+        }
+    }   
+    
+    void StopGame()
+    {
+        Time.timeScale = 0f; // Game will pause
 
-        }    
-    }
+        if (winUI != null)
+        {
+            winUI.SetActive(true);
+        }
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if(player != null)
+        {
+            player.GetComponent<PlayerController>().enabled = false;
+        }
+    }   
 
     private IEnumerator DelayEventManager()
     {
@@ -64,7 +75,7 @@ public class GameManager : MonoBehaviour
 
         // Start the random event trigger
         EventsManager.Instance.StartRandomEventTrigger();
-    }
+    }    
 
     void EventOne()
     {
