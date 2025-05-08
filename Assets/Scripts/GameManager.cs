@@ -26,8 +26,15 @@ public class GameManager : MonoBehaviour
         EventsManager.Instance.AddEvent(EventTwo);
         EventsManager.Instance.AddEvent(EventThree);
 
-        // Start the coroutine to delay the event manager
-        StartCoroutine(DelayEventManager());
+        if (developerMode == true)
+        {
+            StopCoroutine(DelayEventManager());
+        }
+        else
+        {
+            // Start the coroutine to delay the event manager
+            StartCoroutine(DelayEventManager());
+        }        
     }
 
     void Update()
