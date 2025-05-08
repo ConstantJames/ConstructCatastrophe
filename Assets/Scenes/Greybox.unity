@@ -812,10 +812,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 7312105933966498785, guid: 9d00b0881918f8e49b0c313cc63bffbd, type: 3}
-  startPoint: {x: 0, y: 0, z: -50}
-  rows: 3
-  columns: 3
-  spacing: 5
+  startPoint: {x: 0, y: 10, z: -50}
+  size: 3
+  spacing: 6
   gameManager: {fileID: 0}
 --- !u!1 &170027703
 GameObject:
