@@ -195,10 +195,22 @@ public class PlayerController : MonoBehaviour
                 if (rotatePlatformLeft.objectsOnButton.Contains(objectInHands))
                 {
                     rotatePlatformLeft.objectsOnButton.Remove(objectInHands);
+
+                    if (objectInHands.transform.childCount > 0)
+                    {
+                        Transform child = objectInHands.transform.GetChild(0);
+                        rotatePlatformLeft.objectsOnButton.Remove(child.gameObject);
+                    }
                 }
                 else if (rotatePlatformRight.objectsOnButton.Contains(objectInHands))
                 {
                     rotatePlatformRight.objectsOnButton.Remove(objectInHands);
+
+                    if (objectInHands.transform.childCount > 0)
+                    {
+                        Transform child = objectInHands.transform.GetChild(0);
+                        rotatePlatformRight.objectsOnButton.Remove(child.gameObject);
+                    }
                 }
 
                 hasObject = true;

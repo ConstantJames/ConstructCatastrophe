@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WinTrigger : MonoBehaviour
 {
-    private float winTimer = 0f;
+    public float winTimer = 0f;
     private Coroutine winCoroutine;
     public bool winCon = false;
 

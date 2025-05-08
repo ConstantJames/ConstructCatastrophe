@@ -9,9 +9,12 @@ public class EarthQuake : MonoBehaviour
     public float EarthquakeFrequency = 0.1f; // Frequency of the Earthquake updates
     public float RotationIntensity = 0.2f;   // Rotation intensity in degrees
     public GameManager gameManager;
+    public GameObject cam;
 
     private Vector3 originalPosition;
     private Quaternion originalRotation;
+    private Vector3 camOriginalPosition;
+    private Quaternion camOriginalRotation;
 
     private void Start()
     {
@@ -19,9 +22,12 @@ public class EarthQuake : MonoBehaviour
         {
             gameManager = FindAnyObjectByType<GameManager>();
         }
+
         originalPosition = transform.localPosition;
         originalRotation = transform.localRotation;
 
+        camOriginalPosition = cam.transform.localPosition;
+        camOriginalRotation = cam.transform.localRotation;
     }
 
     public void Update()
@@ -58,11 +64,17 @@ public class EarthQuake : MonoBehaviour
             transform.localPosition = originalPosition + new Vector3(offsetX, offsetY, offsetZ);
             transform.localRotation = originalRotation * Quaternion.Euler(rotationX, rotationY, rotationZ);
 
+            cam.transform.localPosition = camOriginalPosition + new Vector3(offsetX, offsetY, offsetZ);
+            cam.transform.localRotation = camOriginalRotation * Quaternion.Euler(rotationX, rotationY, rotationZ);
+
             yield return new WaitForSeconds(EarthquakeFrequency);
         }
 
         // Reset the position and rotation after the Earthquake
         transform.localPosition = originalPosition;
         transform.localRotation = originalRotation;
+
+        cam.transform.localPosition = camOriginalPosition;
+        cam.transform.localRotation = camOriginalRotation;
     }
 }

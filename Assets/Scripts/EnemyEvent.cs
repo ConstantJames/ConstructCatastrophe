@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class EnemyEvent : MonoBehaviour
@@ -64,6 +65,11 @@ public class EnemyEvent : MonoBehaviour
             Enemy enemy = newEnemy.GetComponent<Enemy>();
             enemy.targetSelect = Enemy.Target.Players;
 
+            Transform child = enemy.transform.Find("PushBot1/MainBody");
+            Renderer enemyRend = child.gameObject.GetComponent<Renderer>();
+            Color enemyColor = new Color(0.0f, 0.0f, 0.65f); // blue
+            enemyRend.material.SetColor("_Color", enemyColor);
+
             enemies.Add(newEnemy);
         }
 
@@ -76,9 +82,10 @@ public class EnemyEvent : MonoBehaviour
             Enemy enemy = newEnemy.GetComponent<Enemy>();
             enemy.targetSelect = Enemy.Target.Buttons;
 
-            //Renderer enemyRend = newEnemy.GetComponent<Renderer>();
-            //Color altEnemy = new Color(1.0f, 0.0f, 0.0f);
-            //enemyRend.material.SetColor("_Color", altEnemy);
+            Transform child = enemy.transform.Find("PushBot1/MainBody");
+            Renderer enemyRend = child.gameObject.GetComponent<Renderer>();
+            Color enemyColor = new Color(0.65f, 0.0f, 0.0f); // red
+            enemyRend.material.SetColor("_Color", enemyColor);
 
             enemies.Add(newEnemy);
         }
