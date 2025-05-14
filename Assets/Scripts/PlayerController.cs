@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     public RotatePlatform rotatePlatformLeft;
     public RotatePlatform rotatePlatformRight;
+    public Points points;
 
     public GameObject spawnPointOne;
     public GameObject spawnPointTwo;
@@ -190,6 +191,11 @@ public class PlayerController : MonoBehaviour
                 {
                     PlayerController playerController = objectInHands.GetComponent<PlayerController>();
                     playerController.canMove = false;
+                }
+
+                if (points.objectsInArea.Contains(objectInHands))
+                {
+                    points.RemovePoints(objectInHands);
                 }
 
                 if (rotatePlatformLeft.objectsOnButton.Contains(objectInHands))

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9174642565721311441}
   - component: {fileID: 3281793259947871388}
   - component: {fileID: 7334694149168788703}
+  - component: {fileID: 4403438379217712355}
   m_Layer: 6
   m_Name: Triangle
   m_TagString: Pickable
@@ -134,3 +135,16 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4068373912626513877, guid: 54ffd0a5da3605b409c27e34dd2203ba, type: 3}
+--- !u!114 &4403438379217712355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5672872735779959099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11085b1c9ab1464a9fc3ef2ab9ab7e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointValue: 10
