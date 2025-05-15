@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         winTrigger = FindObjectOfType<WinTrigger>();
-
+        
         // vvv Add events to the list below vvv
         EventsManager.Instance.AddEvent(EventOne);
         EventsManager.Instance.AddEvent(EventTwo);
