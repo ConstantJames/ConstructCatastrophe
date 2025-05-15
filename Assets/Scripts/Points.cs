@@ -13,6 +13,11 @@ public class Points : MonoBehaviour
     void Update()
     {
         pointsText.text = "Points: " + totalPoints;
+
+        if (totalPoints < 0)
+        {
+            totalPoints = 0;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

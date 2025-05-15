@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8800003855072102430}
   - component: {fileID: 3249215454996062812}
   - component: {fileID: 2143901038580808310}
+  - component: {fileID: 1418774911545120157}
   m_Layer: 6
   m_Name: Cube
   m_TagString: Pickable
@@ -147,3 +148,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointValue: 5
+--- !u!114 &1418774911545120157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7312105933966498785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bcf2790a2fdc194b9c15e78cc7dfc85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
