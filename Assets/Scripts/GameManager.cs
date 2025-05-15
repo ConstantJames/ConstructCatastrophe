@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public bool developerMode = false;
     public float EventsDelayTime = 10f;
 
-    private bool multiplayer = false;     
+    public MultiplayerCheck multiCheck;
 
     public GameObject playerTwo;
     public GameObject spawnPoint;    
@@ -19,8 +19,9 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
+        multiCheck = FindObjectOfType<MultiplayerCheck>();
         winTrigger = FindObjectOfType<WinTrigger>();
-        
+
         // vvv Add events to the list below vvv
         EventsManager.Instance.AddEvent(EventOne);
         EventsManager.Instance.AddEvent(EventTwo);
@@ -34,20 +35,27 @@ public class GameManager : MonoBehaviour
         {
             // Start the coroutine to delay the event manager
             StartCoroutine(DelayEventManager());
-        }        
+        }
+
+        // Multiplayer
+        if (multiCheck == null)
+        {
+            return;
+        }
+
+        if (multiCheck.multiplayer)
+        {
+            playerTwo.transform.position = spawnPoint.transform.position;
+            playerTwo.GetComponent<PlayerController>().enabled = true;
+        }
+        else
+        {
+            playerTwo.GetComponent<PlayerController>().enabled = false;
+        }
     }
 
     void Update()
     {
-        // Activate multiplayer - EXTREMELY basic implementation just for proof of concept, will revise later
-        if (Input.GetKeyDown(KeyCode.Tab) && !multiplayer)
-        {
-            playerTwo.transform.position = spawnPoint.transform.position;
-            playerTwo.GetComponent<PlayerController>().enabled = true;
-
-            multiplayer = true;
-        }
-
         // Exit game - Will implement into UI later
         if (Input.GetKeyDown(KeyCode.Escape))
         {

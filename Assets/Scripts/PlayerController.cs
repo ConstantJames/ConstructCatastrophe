@@ -139,6 +139,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        bool turnTransparent = false;
+
         if (Physics.Raycast(transform.position, fwd, out hit, 10, pickableLayerMask))
         {
             if (pickupButton && !hasObject)
@@ -173,6 +175,12 @@ public class PlayerController : MonoBehaviour
                     }
 
                     // Make objects transparent while in player's hands
+                    turnTransparent = true;
+
+                    Material objectMat = rendObject.material;
+                    ChangeRenderingMode renderMode = objectInHands.GetComponent<ChangeRenderingMode>();
+                    renderMode.ChangeRenderMode(objectMat, turnTransparent);
+
                     Color transparent = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 0.5f);
                     rendObject.material.SetColor("_Color", transparent);
                 }
@@ -237,6 +245,12 @@ public class PlayerController : MonoBehaviour
             {
                 Color original = new Color(rendObject.material.color.r, rendObject.material.color.g, rendObject.material.color.b, 1.0f);
                 rendObject.material.SetColor("_Color", original);
+
+                turnTransparent = false;
+
+                Material objectMat = rendObject.material;
+                ChangeRenderingMode renderMode = objectInHands.GetComponent<ChangeRenderingMode>();
+                renderMode.ChangeRenderMode(objectMat, turnTransparent);
             }
             else if ((objectInHands.layer == 7) && (objectInHands.transform.childCount > 0))
             {
