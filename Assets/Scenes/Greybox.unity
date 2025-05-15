@@ -5828,7 +5828,7 @@ MonoBehaviour:
   jumpPowerup: 0
   rotatePlatformLeft: {fileID: 188481499}
   rotatePlatformRight: {fileID: 658000584}
-  points: {fileID: 0}
+  points: {fileID: 380366632}
   spawnPointOne: {fileID: 1396189874}
   spawnPointTwo: {fileID: 1870238011}
 --- !u!54 &1671181925
