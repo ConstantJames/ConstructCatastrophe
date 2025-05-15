@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
         // Player faces the direction they are moving in (smooth turning)
         if (direction != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.15f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.005f);
         }
 
         // Object detection + pick up and drop object

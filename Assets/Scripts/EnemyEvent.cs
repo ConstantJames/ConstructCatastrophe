@@ -29,6 +29,8 @@ public class EnemyEvent : MonoBehaviour
                 StartCoroutine(Invasion());
             }
         }
+
+        RandomEnemy();
     }
 
     public void StartInvasion()
@@ -88,6 +90,16 @@ public class EnemyEvent : MonoBehaviour
             enemyRend.material.SetColor("_Color", enemyColor);
 
             enemies.Add(newEnemy);
+        }
+    }
+
+    void RandomEnemy()
+    {
+        int fiftyFifty = Random.Range(0, 2);
+        
+        if (fiftyFifty == 0)
+        {
+
         }
     }
 }
