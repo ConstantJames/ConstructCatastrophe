@@ -763,7 +763,7 @@ MonoBehaviour:
   playerSelect: 0
   canMove: 1
   speed: 10
-  jumpForce: 14
+  jumpForce: 16
   sphereSize: 2
   maxDistance: 2
   massPowerup: 0
@@ -5821,7 +5821,7 @@ MonoBehaviour:
   playerSelect: 1
   canMove: 1
   speed: 10
-  jumpForce: 14
+  jumpForce: 16
   sphereSize: 2
   maxDistance: 2
   massPowerup: 0
