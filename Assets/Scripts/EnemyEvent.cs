@@ -29,8 +29,6 @@ public class EnemyEvent : MonoBehaviour
                 StartCoroutine(Invasion());
             }
         }
-
-        RandomEnemy();
     }
 
     public void StartInvasion()
@@ -59,47 +57,52 @@ public class EnemyEvent : MonoBehaviour
     {
         // Spawns enemies, limits how many can be active at one time (4)
         ClearList();
+        int fiftyFifty = Random.Range(0, 2);
 
         if (enemies.Count < 4)
         {
             GameObject newEnemy = Instantiate(enemyPrefab, spawnOne.transform);
-
-            Enemy enemy = newEnemy.GetComponent<Enemy>();
-            enemy.targetSelect = Enemy.Target.Players;
-
-            Transform child = enemy.transform.Find("PushBot1/MainBody");
-            Renderer enemyRend = child.gameObject.GetComponent<Renderer>();
-            Color enemyColor = new Color(0.0f, 0.0f, 0.65f); // blue
-            enemyRend.material.SetColor("_Color", enemyColor);
+            RandomEnemy(newEnemy, fiftyFifty);
 
             enemies.Add(newEnemy);
         }
 
+        yield return new WaitForSeconds(1);
+        if (fiftyFifty == 0) { fiftyFifty = 1; }
+        else { fiftyFifty = 0; }
+
         if (enemies.Count < 4)
         {
-            yield return new WaitForSeconds(1);
-
             GameObject newEnemy = Instantiate(enemyPrefab, spawnTwo.transform);
-
-            Enemy enemy = newEnemy.GetComponent<Enemy>();
-            enemy.targetSelect = Enemy.Target.Buttons;
-
-            Transform child = enemy.transform.Find("PushBot1/MainBody");
-            Renderer enemyRend = child.gameObject.GetComponent<Renderer>();
-            Color enemyColor = new Color(0.65f, 0.0f, 0.0f); // red
-            enemyRend.material.SetColor("_Color", enemyColor);
+            RandomEnemy(newEnemy, fiftyFifty);
 
             enemies.Add(newEnemy);
         }
     }
 
-    void RandomEnemy()
+    void RandomEnemy(GameObject newEnemy, int fiftyFifty)
     {
-        int fiftyFifty = Random.Range(0, 2);
-        
         if (fiftyFifty == 0)
         {
+            // Targets Players
+            Enemy enemy = newEnemy.GetComponent<Enemy>();
+            enemy.targetSelect = Enemy.Target.Players;
 
+            Transform child = newEnemy.transform.Find("PushBot1/MainBody");
+            Renderer enemyRend = child.gameObject.GetComponent<Renderer>();
+            Color enemyColor = new Color(0.0f, 0.0f, 0.65f); // blue
+            enemyRend.material.SetColor("_Color", enemyColor);
+        }
+        else
+        {
+            // Targets Buttons
+            Enemy enemy = newEnemy.GetComponent<Enemy>();
+            enemy.targetSelect = Enemy.Target.Buttons;
+
+            Transform child = newEnemy.transform.Find("PushBot1/MainBody");
+            Renderer enemyRend = child.gameObject.GetComponent<Renderer>();
+            Color enemyColor = new Color(0.65f, 0.0f, 0.0f); // red
+            enemyRend.material.SetColor("_Color", enemyColor);
         }
     }
 }

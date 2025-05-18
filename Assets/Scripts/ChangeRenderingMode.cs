@@ -4,29 +4,29 @@ using UnityEngine;
 
 public class ChangeRenderingMode : MonoBehaviour
 {
-    public void ChangeRenderMode(Material objectMat, bool turnTransparent)
+    public void OpaqueMode(Material mat)
     {
-        if (turnTransparent)
-        {
-            // Transparent
-            objectMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-            objectMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            objectMat.SetInt("_ZWrite", 0);
-            objectMat.DisableKeyword("_ALPHATEST_ON");
-            objectMat.DisableKeyword("_ALPHABLEND_ON");
-            objectMat.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            objectMat.renderQueue = 3000;
-        }
-        else
-        {
-            // Opaque
-            objectMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-            objectMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-            objectMat.SetInt("_ZWrite", 1);
-            objectMat.DisableKeyword("_ALPHATEST_ON");
-            objectMat.DisableKeyword("_ALPHABLEND_ON");
-            objectMat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            objectMat.renderQueue = -1;
-        }
+        mat.SetOverrideTag("RenderType", "");
+        mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+        mat.SetInt("_ZWrite", 1);
+        mat.DisableKeyword("_ALPHATEST_ON");
+        mat.DisableKeyword("_ALPHABLEND_ON");
+        mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        mat.renderQueue = -1;
+        mat.SetFloat("_Mode", 0);
+    }
+
+    public void TransparentMode(Material mat)
+    {
+        mat.SetOverrideTag("RenderType", "Transparent");
+        mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        mat.SetInt("_ZWrite", 0);
+        mat.DisableKeyword("_ALPHATEST_ON");
+        mat.EnableKeyword("_ALPHABLEND_ON");
+        mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        mat.SetFloat("_Mode", 3);
     }
 }
