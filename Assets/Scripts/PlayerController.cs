@@ -281,7 +281,7 @@ public class PlayerController : MonoBehaviour
         // Player faces the direction they are moving in (smooth turning)
         if (direction != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.06f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.1f);
         }
 
         // Jumping
