@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EarthQuake : MonoBehaviour
@@ -17,7 +16,7 @@ public class EarthQuake : MonoBehaviour
     private Quaternion camOriginalRotation;
 
     private void Start()
-    {
+    {        
         if (gameManager == null)
         {
             gameManager = FindAnyObjectByType<GameManager>();
@@ -25,7 +24,6 @@ public class EarthQuake : MonoBehaviour
 
         originalPosition = transform.localPosition;
         originalRotation = transform.localRotation;
-
         camOriginalPosition = cam.transform.localPosition;
         camOriginalRotation = cam.transform.localRotation;
     }
@@ -49,10 +47,29 @@ public class EarthQuake : MonoBehaviour
     private IEnumerator Earthquake()
     {
         float elapsedTime = 0f;
+       
+        GameObject eventManager = GameObject.Find("EventManager");
+        if (eventManager != null)
+        {
+            SFXManager sfxManager = eventManager.GetComponent<SFXManager>();
+            if (sfxManager != null)
+            {
+                sfxManager.PlaySound("EarthQuake");
+            }
+            else
+            {
+                Debug.LogWarning("SFXManager component is missing on EventManager!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("EventManager GameObject not found!");
+        }
 
         while (elapsedTime < EarthquakeDuration)
         {
             elapsedTime += EarthquakeFrequency;
+
             float offsetX = Random.Range(-EarthquakeIntensity, EarthquakeIntensity);
             float offsetY = Random.Range(-EarthquakeIntensity, EarthquakeIntensity);
             float offsetZ = Random.Range(-EarthquakeIntensity, EarthquakeIntensity);
@@ -70,10 +87,9 @@ public class EarthQuake : MonoBehaviour
             yield return new WaitForSeconds(EarthquakeFrequency);
         }
 
-        // Reset the position and rotation after the Earthquake
+        //  Reset position & rotation after the earthquake
         transform.localPosition = originalPosition;
         transform.localRotation = originalRotation;
-
         cam.transform.localPosition = camOriginalPosition;
         cam.transform.localRotation = camOriginalRotation;
     }
