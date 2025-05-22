@@ -41,7 +41,6 @@ public class GameManager : MonoBehaviour
             button.SetActive(false);
         }
 
-        timer = 3.99f;
         StartCoroutine(StartCountdown());
 
         // vvv Add events to the list below vvv
@@ -108,12 +107,13 @@ public class GameManager : MonoBehaviour
 
         if (countdownStarted)
         {
-            timer -= Time.deltaTime;
+            timer -= Time.unscaledDeltaTime;
             int seconds = Mathf.FloorToInt(timer % 60);
 
             if (seconds <= 0)
             {
                 countdownText.text = "GO!";
+                Time.timeScale = 1.0f;
             }
             else
             {
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         {
             StopGame();
         }
-    }   
+    }
     
     void StopGame()
     {
@@ -156,13 +156,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartCountdown()
     {
+        timer = 5.0f;
         countdownStarted = true;
         Time.timeScale = 0.0f;
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSecondsRealtime(4);
         countdownStarted = false;
-        Time.timeScale = 1.0f;
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
         countdownText.gameObject.SetActive(false);
     }
 
