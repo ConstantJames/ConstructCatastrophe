@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Pause Menu
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !countdownStarted)
         {
             switch (state)
             {
@@ -146,6 +146,12 @@ public class GameManager : MonoBehaviour
     public void BackToMainMenu()
     {
         Time.timeScale = 1.0f;
+
+        if (multiCheck != null)
+        {
+            Destroy(multiCheck.gameObject);
+        }
+
         SceneManager.LoadSceneAsync(0);
     }
 
@@ -156,7 +162,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartCountdown()
     {
-        timer = 5.0f;
+        timer = 3.99f;
         countdownStarted = true;
         Time.timeScale = 0.0f;
         yield return new WaitForSecondsRealtime(4);
