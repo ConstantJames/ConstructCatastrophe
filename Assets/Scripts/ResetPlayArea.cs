@@ -19,17 +19,11 @@ public class ResetPlayArea : MonoBehaviour
         hitObjects = Physics.OverlapBox(transform.position, transform.localScale / 2, Quaternion.identity, pickableLayerMask);
     }
 
-    void Update()
+    public void RestartArea()
     {
-        // Placeholder - will be put into UI later
-        resetButton = Input.GetKeyDown(KeyCode.P);
-
-        if (resetButton)
+        foreach (Collider hitObject in hitObjects)
         {
-            foreach (Collider hitObject in hitObjects)
-            {
-                Destroy(hitObject.gameObject);
-            }
+            Destroy(hitObject.gameObject);
         }
     }
 }

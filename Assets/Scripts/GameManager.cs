@@ -1,10 +1,19 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameState { Play, Pause };
+    public GameState state;
+
     public bool developerMode = false;
     public float EventsDelayTime = 10f;
+
+    private bool countdownStarted = false;
+    private float timer;
+    public TextMeshProUGUI countdownText;
 
     public MultiplayerCheck multiCheck;
 
@@ -16,11 +25,24 @@ public class GameManager : MonoBehaviour
     public EnemyEvent enemyEvent;
     public WinTrigger winTrigger;
     public GameObject winUI;
+
+    public GameObject[] pauseMenu;
     
     private void Start()
     {
         multiCheck = FindObjectOfType<MultiplayerCheck>();
         winTrigger = FindObjectOfType<WinTrigger>();
+
+        // Game Started
+        state = GameState.Play;
+
+        foreach (GameObject button in pauseMenu)
+        {
+            button.SetActive(false);
+        }
+
+        timer = 3.99f;
+        StartCoroutine(StartCountdown());
 
         // vvv Add events to the list below vvv
         EventsManager.Instance.AddEvent(EventOne);
@@ -56,11 +78,49 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Exit game - Will implement into UI later
+        // Pause Menu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
+            switch (state)
+            {
+                case GameState.Play:
+                    Time.timeScale = 0.0f;
+
+                    foreach (GameObject button in pauseMenu)
+                    {
+                        button.SetActive(true);
+                    }
+
+                    state = GameState.Pause;
+                    break;
+                case GameState.Pause:
+                    Time.timeScale = 1.0f;
+
+                    foreach (GameObject button in pauseMenu)
+                    {
+                        button.SetActive(false);
+                    }
+
+                    state = GameState.Play;
+                    break;
+            }
         }
+
+        if (countdownStarted)
+        {
+            timer -= Time.deltaTime;
+            int seconds = Mathf.FloorToInt(timer % 60);
+
+            if (seconds <= 0)
+            {
+                countdownText.text = "GO!";
+            }
+            else
+            {
+                countdownText.text = seconds.ToString();
+            }
+        }
+
         if(winTrigger.winCon)
         {
             StopGame();
@@ -69,7 +129,7 @@ public class GameManager : MonoBehaviour
     
     void StopGame()
     {
-        Time.timeScale = 0f; // Game will pause
+        Time.timeScale = 0.0f; // Game will pause
 
         if (winUI != null)
         {
@@ -81,7 +141,30 @@ public class GameManager : MonoBehaviour
         {
             player.GetComponent<PlayerController>().enabled = false;
         }
-    }   
+    }
+
+    public void BackToMainMenu()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadSceneAsync(0);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    private IEnumerator StartCountdown()
+    {
+        countdownStarted = true;
+        Time.timeScale = 0.0f;
+        yield return new WaitForSeconds(4);
+        countdownStarted = false;
+        Time.timeScale = 1.0f;
+
+        yield return new WaitForSeconds(1);
+        countdownText.gameObject.SetActive(false);
+    }
 
     private IEnumerator DelayEventManager()
     {

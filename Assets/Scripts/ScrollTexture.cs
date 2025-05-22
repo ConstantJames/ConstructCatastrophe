@@ -8,6 +8,9 @@ public class ScrollTexture : MonoBehaviour
     public float scrollSpeedY;
     private MeshRenderer meshRenderer;
 
+    public GameManager gameMg;
+    public WinTrigger win;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +20,9 @@ public class ScrollTexture : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        meshRenderer.material.mainTextureOffset = new Vector2(Time.realtimeSinceStartup * scrollSpeedX, Time.realtimeSinceStartup * scrollSpeedY);
+        if (gameMg.state == GameManager.GameState.Play && !win.winCon)
+        {
+            meshRenderer.material.mainTextureOffset = new Vector2(Time.time * scrollSpeedX, Time.time * scrollSpeedY);
+        }
     }
 }
