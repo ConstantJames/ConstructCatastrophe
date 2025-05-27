@@ -83,24 +83,10 @@ public class GameManager : MonoBehaviour
             switch (state)
             {
                 case GameState.Play:
-                    Time.timeScale = 0.0f;
-
-                    foreach (GameObject button in pauseMenu)
-                    {
-                        button.SetActive(true);
-                    }
-
-                    state = GameState.Pause;
+                    PauseGame();
                     break;
                 case GameState.Pause:
-                    Time.timeScale = 1.0f;
-
-                    foreach (GameObject button in pauseMenu)
-                    {
-                        button.SetActive(false);
-                    }
-
-                    state = GameState.Play;
+                    UnpauseGame();
                     break;
             }
         }
@@ -141,6 +127,30 @@ public class GameManager : MonoBehaviour
         {
             player.GetComponent<PlayerController>().enabled = false;
         }
+    }
+
+    void PauseGame()
+    {
+        Time.timeScale = 0.0f;
+
+        foreach (GameObject button in pauseMenu)
+        {
+            button.SetActive(true);
+        }
+
+        state = GameState.Pause;
+    }
+
+    void UnpauseGame()
+    {
+        Time.timeScale = 1.0f;
+
+        foreach (GameObject button in pauseMenu)
+        {
+            button.SetActive(false);
+        }
+
+        state = GameState.Play;
     }
 
     public void BackToMainMenu()

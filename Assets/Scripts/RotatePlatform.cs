@@ -30,7 +30,10 @@ public class RotatePlatform : MonoBehaviour
     {
         if (other.CompareTag("Player") || other.CompareTag("Enemy") || other.CompareTag("Pickable"))
         {
-            objectsOnButton.Add(other.gameObject);
+            if (other.transform.root == other.transform)
+            {
+                objectsOnButton.Add(other.gameObject);
+            }
         }
     }
 

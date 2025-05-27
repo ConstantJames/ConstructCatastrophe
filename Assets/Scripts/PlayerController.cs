@@ -30,8 +30,8 @@ public class PlayerController : MonoBehaviour
     public float sphereSize = 2.0f;
     public float maxDistance = 2.0f;
 
-    private float startTime;
-    private float timePressed;
+    private bool dropIsHeld;
+    public float dropTimer = 0.0f;
 
     private Transform playerHands;
     private GameObject objectInHands;
@@ -42,12 +42,14 @@ public class PlayerController : MonoBehaviour
     private List<GameObject> colorChanged = new List<GameObject>();
 
     private bool pickupButton;
-    private bool dropButton;
     private bool dropReleased;
     private bool hasObject = false;
 
     public bool massPowerup = false;
     public bool jumpPowerup = false;
+    public GameObject playerHat;
+    public GameObject playerBoot;
+    public Material metalMat;
 
     public RotatePlatform rotatePlatformLeft;
     public RotatePlatform rotatePlatformRight;
@@ -76,7 +78,7 @@ public class PlayerController : MonoBehaviour
                 verticalVelocity = Input.GetAxis("Vertical1");
                 spaceDown = Input.GetButtonDown("Jump1");
                 pickupButton = Input.GetKeyDown(KeyCode.J);
-                dropButton = Input.GetKeyDown(KeyCode.K);
+                dropIsHeld = Input.GetKey(KeyCode.K);
                 dropReleased = Input.GetKeyUp(KeyCode.K);
                 break;
             case Player.Two:
@@ -84,7 +86,7 @@ public class PlayerController : MonoBehaviour
                 verticalVelocity = Input.GetAxis("Vertical2");
                 spaceDown = Input.GetButtonDown("Jump2");
                 pickupButton = Input.GetKeyDown(KeyCode.Keypad1);
-                dropButton = Input.GetKeyDown(KeyCode.Keypad2);
+                dropIsHeld = Input.GetKey(KeyCode.Keypad2);
                 dropReleased = Input.GetKeyUp(KeyCode.Keypad2);
                 break;
         }
@@ -199,31 +201,24 @@ public class PlayerController : MonoBehaviour
                 if (rotatePlatformLeft.objectsOnButton.Contains(objectInHands))
                 {
                     rotatePlatformLeft.objectsOnButton.Remove(objectInHands);
-
-                    if (objectInHands.transform.childCount > 0)
-                    {
-                        Transform child = objectInHands.transform.GetChild(0);
-                        rotatePlatformLeft.objectsOnButton.Remove(child.gameObject);
-                    }
                 }
                 else if (rotatePlatformRight.objectsOnButton.Contains(objectInHands))
                 {
                     rotatePlatformRight.objectsOnButton.Remove(objectInHands);
-
-                    if (objectInHands.transform.childCount > 0)
-                    {
-                        Transform child = objectInHands.transform.GetChild(0);
-                        rotatePlatformRight.objectsOnButton.Remove(child.gameObject);
-                    }
                 }
 
                 hasObject = true;
             }
         }
 
-        if (dropButton && hasObject)
+        if (dropIsHeld && hasObject)
         {
-            startTime = Time.time;
+            dropTimer += Time.deltaTime;
+
+            if (dropTimer > 2.0f)
+            {
+                dropTimer = 2.0f;
+            }
         }
 
         if (dropReleased && hasObject)
@@ -246,16 +241,9 @@ public class PlayerController : MonoBehaviour
             }
 
             // Checks how long button is held down for, throws if held for 0.5 seconds
-            timePressed = Time.time - startTime;
-
-            if (timePressed > 2.0f)
+            if (dropTimer > 0.5f)
             {
-                timePressed = 2.0f;
-            }
-
-            if (timePressed > 0.5f)
-            {
-                Vector3 throwVelocity = (transform.forward * timePressed * 9.0f) + (transform.up * timePressed * 5.0f);
+                Vector3 throwVelocity = (transform.forward * dropTimer * 9.0f) + (transform.up * dropTimer * 5.0f);
                 rbObject.velocity = throwVelocity;
 
                 objectInHands.transform.parent = null;
@@ -265,6 +253,7 @@ public class PlayerController : MonoBehaviour
                 objectInHands.transform.parent = null;
             }
 
+            dropTimer = 0.0f;
             hasObject = false;
         }
     }
@@ -368,7 +357,13 @@ public class PlayerController : MonoBehaviour
     IEnumerator MassPowerUpCountdown()
     {
         Debug.Log("Mass Powerup activated - 30 seconds");
+        Renderer hatRend = playerHat.GetComponent<Renderer>();
+        Material hatOriginal = hatRend.material;
+        hatRend.material = metalMat;
+
         yield return new WaitForSeconds(30);
+
+        hatRend.material = hatOriginal;
         massPowerup = false;
         Debug.Log("Mass Powerup deactivated");
     }
@@ -376,7 +371,11 @@ public class PlayerController : MonoBehaviour
     IEnumerator JumpPowerUpCountdown()
     {
         Debug.Log("Jump Powerup activated - 30 seconds");
+        playerBoot.SetActive(true);
+
         yield return new WaitForSeconds(30);
+
+        playerBoot.SetActive(false);
         jumpPowerup = false;
         canDoubleJump = false;
         Debug.Log("Jump Powerup deactivated");
