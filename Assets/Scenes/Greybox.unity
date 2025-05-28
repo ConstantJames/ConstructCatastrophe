@@ -847,6 +847,7 @@ MonoBehaviour:
   jumpPowerup: 0
   playerHat: {fileID: 1639190280}
   playerBoot: {fileID: 1854508638}
+  hatMat: {fileID: 2100000, guid: b23c8067fde522b4e9344fa82fb10567, type: 2}
   metalMat: {fileID: 2100000, guid: 5daf181b15b46c74095690f2a58bb299, type: 2}
   rotatePlatformLeft: {fileID: 188481499}
   rotatePlatformRight: {fileID: 658000584}
@@ -2935,6 +2936,7 @@ MonoBehaviour:
   jumpPowerup: 0
   playerHat: {fileID: 629327034}
   playerBoot: {fileID: 1018670812}
+  hatMat: {fileID: 2100000, guid: f8227c9969da2774f8153f4ba2a87f36, type: 2}
   metalMat: {fileID: 2100000, guid: 5daf181b15b46c74095690f2a58bb299, type: 2}
   rotatePlatformLeft: {fileID: 188481499}
   rotatePlatformRight: {fileID: 658000584}

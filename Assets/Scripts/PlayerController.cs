@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     public bool jumpPowerup = false;
     public GameObject playerHat;
     public GameObject playerBoot;
+    public Material hatMat;
     public Material metalMat;
 
     public RotatePlatform rotatePlatformLeft;
@@ -358,12 +359,11 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Mass Powerup activated - 30 seconds");
         Renderer hatRend = playerHat.GetComponent<Renderer>();
-        Material hatOriginal = hatRend.material;
         hatRend.material = metalMat;
 
         yield return new WaitForSeconds(30);
 
-        hatRend.material = hatOriginal;
+        hatRend.material = hatMat;
         massPowerup = false;
         Debug.Log("Mass Powerup deactivated");
     }
