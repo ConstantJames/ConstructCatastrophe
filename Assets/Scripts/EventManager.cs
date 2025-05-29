@@ -14,8 +14,8 @@ public class EventsManager : MonoBehaviour
     public static EventsManager Instance;
 
     private string eventName;
-    public TextMeshProUGUI warningText;
-    private bool countdownStarted = false;
+    public TextMeshProUGUI warningText;        
+    public bool countdownStarted = false;
     private float timer;
 
     private void Awake()
@@ -36,10 +36,7 @@ public class EventsManager : MonoBehaviour
     {
         if (countdownStarted)
         {
-            timer -= Time.deltaTime;
-            int seconds = Mathf.FloorToInt(timer % 60);
-
-            warningText.text = eventName + " in " + seconds + " seconds!";
+            WarningEvent();
         }
     }
 
@@ -53,6 +50,15 @@ public class EventsManager : MonoBehaviour
     public void StartRandomEventTrigger()
     {
         StartCoroutine(RandomEvent());
+    }
+
+    public IEnumerator WarningEvent()
+    {        
+        timer -= Time.deltaTime;
+        int seconds = Mathf.FloorToInt(timer % 60);
+
+        warningText.text = eventName + " in " + seconds + " seconds!";        
+        return null;
     }
 
     private IEnumerator RandomEvent()

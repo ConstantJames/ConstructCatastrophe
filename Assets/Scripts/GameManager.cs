@@ -26,19 +26,22 @@ public class GameManager : MonoBehaviour
     public WinTrigger winTrigger;
     public GameObject winUI;
 
-    public GameObject[] pauseMenu;
+    private GameObject pauseMenu;
+    private GameObject eventManager;
     
     private void Start()
     {
         multiCheck = FindObjectOfType<MultiplayerCheck>();
         winTrigger = FindObjectOfType<WinTrigger>();
+        pauseMenu = GameObject.Find("PauseMenu");
+        eventManager = GameObject.Find("EventManager");
 
         // Game Started
         state = GameState.Play;
 
-        foreach (GameObject button in pauseMenu)
+        if (state != GameState.Pause)
         {
-            button.SetActive(false);
+            pauseMenu.SetActive(false);
         }
 
         StartCoroutine(StartCountdown());
@@ -133,10 +136,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0.0f;
 
-        foreach (GameObject button in pauseMenu)
-        {
-            button.SetActive(true);
-        }
+        pauseMenu.SetActive(true);    
 
         state = GameState.Pause;
     }
@@ -145,10 +145,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1.0f;
 
-        foreach (GameObject button in pauseMenu)
-        {
-            button.SetActive(false);
-        }
+        pauseMenu.SetActive(false);
 
         state = GameState.Play;
     }
@@ -163,6 +160,11 @@ public class GameManager : MonoBehaviour
         }
 
         SceneManager.LoadSceneAsync(0);
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void QuitGame()

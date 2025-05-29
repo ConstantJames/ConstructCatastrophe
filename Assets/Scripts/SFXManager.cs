@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class SFXManager : MonoBehaviour
 {
-    public AudioSource audioSource;
-    public AudioClip earthquakeSound;
-    public AudioClip windSound;
-    public AudioClip robotSound;
+    [SerializeField]
+    private AudioSource audioSource;
+    [SerializeField]
+    private AudioClip earthquakeSound;
+    [SerializeField]
+    private AudioClip windSound;
+    [SerializeField]
+    private AudioClip robotSound;
+    [SerializeField]
+    private AudioClip warningAlarm;
 
     public void PlaySound(string soundType)
     {
@@ -22,6 +28,9 @@ public class SFXManager : MonoBehaviour
                 break;
             case "A.I. Invasion":
                 audioSource.clip = robotSound;
+                break;
+            case "WarningAlarm":
+                audioSource.clip = warningAlarm;
                 break;
         }
         audioSource.Play();
