@@ -766,8 +766,13 @@ MonoBehaviour:
   jumpForce: 16
   sphereSize: 2
   maxDistance: 2
+  dropTimer: 0
   massPowerup: 0
   jumpPowerup: 0
+  playerHat: {fileID: 0}
+  playerBoot: {fileID: 0}
+  hatMat: {fileID: 0}
+  metalMat: {fileID: 0}
   rotatePlatformLeft: {fileID: 188481499}
   rotatePlatformRight: {fileID: 658000584}
   points: {fileID: 380366632}
@@ -3107,6 +3112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeedX: 0
   scrollSpeedY: -0.024
+  gameMg: {fileID: 0}
+  win: {fileID: 1593501669}
 --- !u!1001 &660316517
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5628,6 +5635,7 @@ MonoBehaviour:
   minDelay: 10
   maxDelay: 30
   warningText: {fileID: 1400520967}
+  countdownStarted: 0
 --- !u!4 &1533203546 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 63174f45a804e7c4d89c073115cf7565, type: 3}
@@ -5897,6 +5905,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeedX: 0.0075
   scrollSpeedY: 0.008
+  gameMg: {fileID: 0}
+  win: {fileID: 0}
+--- !u!114 &1593501669 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4490403968998172375, guid: 748edcf9d037e3b44b3affdd822121e0, type: 3}
+  m_PrefabInstance: {fileID: 5209604926043897632}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3b66c16f3741e48ad89cc4623aae3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1603520331
 GameObject:
   m_ObjectHideFlags: 0
@@ -6279,8 +6300,13 @@ MonoBehaviour:
   jumpForce: 16
   sphereSize: 2
   maxDistance: 2
+  dropTimer: 0
   massPowerup: 0
   jumpPowerup: 0
+  playerHat: {fileID: 0}
+  playerBoot: {fileID: 0}
+  hatMat: {fileID: 0}
+  metalMat: {fileID: 0}
   rotatePlatformLeft: {fileID: 188481499}
   rotatePlatformRight: {fileID: 658000584}
   points: {fileID: 380366632}
@@ -6591,8 +6617,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97a5a3da839385048bdad41fe6dd5529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   developerMode: 0
   EventsDelayTime: 10
+  countdownText: {fileID: 0}
+  multiCheck: {fileID: 0}
   playerTwo: {fileID: 1671181923}
   spawnPoint: {fileID: 1870238011}
   earthQuake: {fileID: 1560620518}
@@ -7106,6 +7135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeedX: 0
   scrollSpeedY: -0.024
+  gameMg: {fileID: 0}
+  win: {fileID: 1593501669}
 --- !u!1 &1989231211
 GameObject:
   m_ObjectHideFlags: 0
